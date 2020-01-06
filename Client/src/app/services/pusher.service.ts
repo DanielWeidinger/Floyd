@@ -5,7 +5,7 @@ import * as Pusher from 'pusher-js';
 })
 export class PusherService {
 
-  pusher: Pusher.Pusher;
+  private pusher: Pusher.Pusher;
   messagesChannel: Pusher.Channel;
 
   constructor() {
