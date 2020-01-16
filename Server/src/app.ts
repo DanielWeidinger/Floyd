@@ -1,13 +1,13 @@
-import express from 'express'
+import express, { RequestHandler } from 'express'
 import { Application } from 'express'
 import IControllable from './controller/IControllable';
-import IUseable from './middleware/IUseable';
+import { Middleware } from './middleware/Middleware';
 
 class App{
     public app: Application
     public port: number
 
-    constructor(port: number, middleWare: any, controllers: IControllable[]){
+    constructor(port: number, middleWare: Middleware[], controllers: IControllable[]){
         this.app = express();
         this.port = port;
 
@@ -15,9 +15,9 @@ class App{
         this.routes(controllers)
     }
 
-    private middlewares(middleWares: any[]) {
+    private middlewares(middleWares: Middleware[]) {
         middleWares.forEach(middleWare => {
-            this.app.use(middleWare)
+            this.app.use(middleWare.route, middleWare.handler)
         })
     }
 

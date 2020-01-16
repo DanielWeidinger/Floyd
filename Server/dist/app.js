@@ -14,7 +14,7 @@ var App = /** @class */ (function () {
     App.prototype.middlewares = function (middleWares) {
         var _this = this;
         middleWares.forEach(function (middleWare) {
-            _this.app.use(middleWare);
+            _this.app.use(middleWare.route, middleWare.handler);
         });
     };
     App.prototype.routes = function (controllers) {
