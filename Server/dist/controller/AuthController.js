@@ -41,7 +41,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var jsonwebtoken_1 = require("jsonwebtoken");
-var mongoose_1 = require("mongoose");
 var express_validator_1 = require("express-validator");
 var User_1 = __importDefault(require("../models/User"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
@@ -49,17 +48,17 @@ var AuthController = /** @class */ (function () {
     function AuthController(path, mongoose) {
         this.router = express_1.Router();
         this.path = path;
-        this.mongoose = new mongoose_1.Mongoose();
         this.mongoose = mongoose;
         this.initRoutes();
     }
     AuthController.prototype.initRoutes = function () {
-        this.router.post(this.path + '/sign-up', express_validator_1.check("username", "Please Enter a Valid Username")
+        this.router.post(this.path + '/register', express_validator_1.check("username", "Please Enter a Valid Username")
             .not()
             .isEmpty(), express_validator_1.check("password", "Please enter a valid password").isLength({
             min: 6
         }), this.handleSignUp);
         this.router.post(this.path + '/login', function (req, res) {
+            res.send("Login route. Jo lol");
         });
         this.router.get(this.path + '/secret-route', function (req, res) {
             res.send('This is the secret content. Only logged in users can see that!');
@@ -67,9 +66,9 @@ var AuthController = /** @class */ (function () {
     };
     AuthController.prototype.handleSignUp = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var errors, _a, username, password, user, salt, _b, payload, err_1;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var errors, _a, username, password, user, passwordSalt, passwordHash, payload, err_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         errors = express_validator_1.validationResult(req);
                         console.log(req.body);
@@ -79,34 +78,36 @@ var AuthController = /** @class */ (function () {
                                 })];
                         }
                         _a = req.body, username = _a.username, password = _a.password;
-                        _c.label = 1;
+                        _b.label = 1;
                     case 1:
-                        _c.trys.push([1, 6, , 7]);
+                        _b.trys.push([1, 6, , 7]);
+                        this.mongoose.Model.
+                        ;
                         return [4 /*yield*/, User_1.default.findOne({
-                                email: email
+                                username: username
                             })];
                     case 2:
-                        user = _c.sent();
+                        user = _b.sent();
+                        console.log(user);
                         if (user) {
                             return [2 /*return*/, res.status(400).json({
                                     msg: "User Already Exists"
                                 })];
                         }
-                        user = new User_1.default({
-                            username: username,
-                            email: email,
-                            password: password
-                        });
                         return [4 /*yield*/, bcryptjs_1.default.genSalt(10)];
                     case 3:
-                        salt = _c.sent();
-                        _b = user;
-                        return [4 /*yield*/, bcryptjs_1.default.hash(password, salt)];
+                        passwordSalt = _b.sent();
+                        return [4 /*yield*/, bcryptjs_1.default.hash(password, passwordSalt)];
                     case 4:
-                        _b.passwordHash = _c.sent();
+                        passwordHash = _b.sent();
+                        user = new User_1.default({
+                            username: username,
+                            passwordHash: passwordHash,
+                            passwordSalt: passwordSalt
+                        });
                         return [4 /*yield*/, user.save()];
                     case 5:
-                        _c.sent();
+                        _b.sent();
                         payload = {
                             user: {
                                 id: user.id
@@ -123,7 +124,7 @@ var AuthController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 7];
                     case 6:
-                        err_1 = _c.sent();
+                        err_1 = _b.sent();
                         console.log(err_1.message);
                         res.status(500).send("Error in Saving");
                         return [3 /*break*/, 7];

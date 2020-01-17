@@ -1,18 +1,3 @@
-import { Mongoose } from 'mongoose'
-
-export function getMongoInstace(connectionString: string): Mongoose{
-
-    const mongoose = new Mongoose()
-
-    try {
-        mongoose.connect(connectionString, {
-            useNewUrlParser: true
-        });
-        console.log("Connected to DB !!");
-    } catch (e) {
-        console.log(e);
-        throw e;
-    }
-
-    return mongoose;
+export class Config{
+    public connectionString: string = "mongodb+srv://daniel:daniel123@cluster0-wi7r8.mongodb.net/test?retryWrites=true&w=majority";
 }

@@ -12,17 +12,15 @@ export class AuthController implements IControllable {
     private mongoose: Mongoose;
 
     constructor(path: string, mongoose: Mongoose) {
-        this.path = path;
-        this.mongoose = new Mongoose();
+        this.path = path;        
         this.mongoose = mongoose;
-        
 
         this.initRoutes()
     }
 
     initRoutes(): void {
 
-        this.router.post(this.path + '/sign-up',
+        this.router.post(this.path + '/register',
             check("username", "Please Enter a Valid Username")
             .not()
             .isEmpty(),
@@ -31,8 +29,9 @@ export class AuthController implements IControllable {
             }), this.handleSignUp);
         
         this.router.post(this.path + '/login', (req: Request, res: Response) => {
-
+            res.send("Login route. Jo lol")
         });
+
         this.router.get(this.path + '/secret-route', (req: Request, res: Response) => {
             res.send('This is the secret content. Only logged in users can see that!');
         });
@@ -49,28 +48,30 @@ export class AuthController implements IControllable {
             });
         }
 
-        const {
-            username,
-            password
-        } = req.body;
+        const { username,password } = req.body;
+
         try {
+                this.mongoose.Model.
             let user = await User.findOne({
-                email
+                username
             });
+
+            console.log(user)
+
             if (user) {
                 return res.status(400).json({
                     msg: "User Already Exists"
                 });
             }
 
+            const passwordSalt = await bcrypt.genSalt(10);
+            const passwordHash = await bcrypt.hash(password, passwordSalt);
+
             user = new User({
                 username,
-                email,
-                password
+                passwordHash,
+                passwordSalt
             });
-
-            const salt = await bcrypt.genSalt(10);
-            user.passwordHash = await bcrypt.hash(password, salt);
 
             await user.save();
 

@@ -1,18 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-function getMongoInstace(connectionString) {
-    var mongoose = new mongoose_1.Mongoose();
-    try {
-        mongoose.connect(connectionString, {
-            useNewUrlParser: true
-        });
-        console.log("Connected to DB !!");
+var Config = /** @class */ (function () {
+    function Config() {
+        this.connectionString = "mongodb+srv://daniel:daniel123@cluster0-wi7r8.mongodb.net/test?retryWrites=true&w=majority";
     }
-    catch (e) {
-        console.log(e);
-        throw e;
-    }
-    return mongoose;
-}
-exports.getMongoInstace = getMongoInstace;
+    return Config;
+}());
+exports.Config = Config;
