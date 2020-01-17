@@ -11,18 +11,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var app_1 = __importDefault(require("./app"));
-var ApiController_1 = require("./controller/ApiController");
 var bodyParser = __importStar(require("body-parser"));
 var Middleware_1 = require("./middleware/Middleware");
-var AuthMiddleware_1 = require("./middleware/AuthMiddleware");
+var config_1 = require("./config/config");
+var AuthController_1 = require("./controller/AuthController");
 var app = new app_1.default(5000, 
 //Middleware  
 [
     new Middleware_1.Middleware('/', bodyParser.json()),
     new Middleware_1.Middleware('/', bodyParser.urlencoded({ extended: true })),
-    new Middleware_1.Middleware('/auth/register', AuthMiddleware_1.signUpMiddleware)
 ], 
 //Controller 
-[new ApiController_1.ApiController('/api'),
-    new ApiController_1.ApiController('/auth')]);
+[
+    new AuthController_1.AuthController('/auth', config_1.getMongoInstace("mongodb+srv://daniel:daniel123@cluster0-wi7r8.mongodb.net/test?retryWrites=true&w=majority"))
+]);
 app.listen();
