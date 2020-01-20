@@ -1,13 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule, HttpClient } from '@angular/common/http'
 
 import { AppComponent } from './app.component';
 import { MessagesComponent } from './components/messages/messages.component';
-import { PusherService } from './services/pusher.service';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { SocketService } from './services/socket.service';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -18,9 +19,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule
   ],
-  providers: [PusherService],
+  providers: [
+    SocketService, 
+    AuthService,
+    HttpClient
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

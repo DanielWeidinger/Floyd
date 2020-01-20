@@ -20,6 +20,12 @@ var UserSchema = new mongoose_1.Schema({
     salt: {
         type: String,
         required: true
+    },
+    groups: {
+        type: [String]
+    },
+    contacts: {
+        type: [String]
     }
 });
 exports.default = mongoose_1.default.model('User', UserSchema);

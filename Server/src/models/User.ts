@@ -1,9 +1,12 @@
 import mongoose, { Schema, Document } from "mongoose"
+import { IGroup } from './Group'
 
-interface IUser extends Document {
+export interface IUser extends Document {
     username: string;
     passwordHash: string;
     salt: string;
+    groups: IGroup['_id'][]
+    contacts: IUser['_id'][]
 }
 
 const UserSchema: Schema = new Schema({
@@ -18,6 +21,12 @@ const UserSchema: Schema = new Schema({
     salt: {
         type: String,
         required: true
+    },
+    groups: {
+        type: [String]
+    },
+    contacts: {
+        type: [String]
     }
 })
 

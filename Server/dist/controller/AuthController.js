@@ -44,34 +44,41 @@ var jsonwebtoken_1 = require("jsonwebtoken");
 var express_validator_1 = require("express-validator");
 var User_1 = __importDefault(require("../models/User"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
+var Config_1 = require("../config/Config");
 var AuthController = /** @class */ (function () {
-    function AuthController(path, mongoose) {
+    function AuthController(path) {
         this.router = express_1.Router();
         this.path = path;
-        this.mongoose = mongoose;
         this.initRoutes();
     }
     AuthController.prototype.initRoutes = function () {
-        this.router.post(this.path + '/register', express_validator_1.check("username", "Please Enter a Valid Username")
-            .not()
-            .isEmpty(), express_validator_1.check("password", "Please enter a valid password").isLength({
-            min: 6
-        }), this.handleSignUp);
-        this.router.post(this.path + '/login', function (req, res) {
-            res.send("Login route. Jo lol");
-        });
+        this.router.post(this.path + '/register', [
+            express_validator_1.check("username", "Please Enter a Valid Username")
+                .not()
+                .isEmpty(),
+            express_validator_1.check("password", "Please enter a valid password").isLength({
+                min: 6
+            })
+        ], this.handleSignUp);
+        this.router.post(this.path + '/login', [
+            express_validator_1.check("username", "Please Enter a Valid Username")
+                .not()
+                .isEmpty(),
+            express_validator_1.check("password", "Please enter a valid password").isLength({
+                min: 6
+            })
+        ], this.handleLogin);
         this.router.get(this.path + '/secret-route', function (req, res) {
             res.send('This is the secret content. Only logged in users can see that!');
         });
     };
     AuthController.prototype.handleSignUp = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var errors, _a, username, password, user, passwordSalt, passwordHash, payload, err_1;
+            var errors, _a, username, password, user, salt, passwordHash, payload, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         errors = express_validator_1.validationResult(req);
-                        console.log(req.body);
                         if (!errors.isEmpty()) {
                             return [2 /*return*/, res.status(400).json({
                                     errors: errors.array()
@@ -81,14 +88,11 @@ var AuthController = /** @class */ (function () {
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 6, , 7]);
-                        this.mongoose.Model.
-                        ;
                         return [4 /*yield*/, User_1.default.findOne({
                                 username: username
                             })];
                     case 2:
                         user = _b.sent();
-                        console.log(user);
                         if (user) {
                             return [2 /*return*/, res.status(400).json({
                                     msg: "User Already Exists"
@@ -96,14 +100,14 @@ var AuthController = /** @class */ (function () {
                         }
                         return [4 /*yield*/, bcryptjs_1.default.genSalt(10)];
                     case 3:
-                        passwordSalt = _b.sent();
-                        return [4 /*yield*/, bcryptjs_1.default.hash(password, passwordSalt)];
+                        salt = _b.sent();
+                        return [4 /*yield*/, bcryptjs_1.default.hash(password, salt)];
                     case 4:
                         passwordHash = _b.sent();
                         user = new User_1.default({
                             username: username,
                             passwordHash: passwordHash,
-                            passwordSalt: passwordSalt
+                            salt: salt
                         });
                         return [4 /*yield*/, user.save()];
                     case 5:
@@ -113,8 +117,8 @@ var AuthController = /** @class */ (function () {
                                 id: user.id
                             }
                         };
-                        jsonwebtoken_1.sign(payload, "randomString", {
-                            expiresIn: 10000
+                        jsonwebtoken_1.sign(payload, Config_1.Config.secret, {
+                            expiresIn: Config_1.Config.tokenExpiration
                         }, function (err, token) {
                             if (err)
                                 throw err;
@@ -129,6 +133,65 @@ var AuthController = /** @class */ (function () {
                         res.status(500).send("Error in Saving");
                         return [3 /*break*/, 7];
                     case 7: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    AuthController.prototype.handleLogin = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var errors, _a, email, password, user, isMatch, payload, e_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        errors = express_validator_1.validationResult(req);
+                        if (!errors.isEmpty()) {
+                            return [2 /*return*/, res.status(400).json({
+                                    errors: errors.array()
+                                })];
+                        }
+                        _a = req.body, email = _a.email, password = _a.password;
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 4, , 5]);
+                        return [4 /*yield*/, User_1.default.findOne({
+                                email: email
+                            })];
+                    case 2:
+                        user = _b.sent();
+                        if (!user)
+                            return [2 /*return*/, res.status(400).json({
+                                    message: "User Not Exist"
+                                })];
+                        return [4 /*yield*/, bcryptjs_1.default.compare(password, user.passwordHash)];
+                    case 3:
+                        isMatch = _b.sent();
+                        if (!isMatch)
+                            return [2 /*return*/, res.status(400).json({
+                                    message: "Incorrect Password !"
+                                })];
+                        payload = {
+                            user: {
+                                id: user.id
+                            }
+                        };
+                        jsonwebtoken_1.sign(payload, Config_1.Config.secret, {
+                            expiresIn: Config_1.Config.tokenExpiration
+                        }, function (err, token) {
+                            if (err)
+                                throw err;
+                            res.status(200).json({
+                                token: token
+                            });
+                        });
+                        return [3 /*break*/, 5];
+                    case 4:
+                        e_1 = _b.sent();
+                        console.error(e_1);
+                        res.status(500).json({
+                            message: "Server Error"
+                        });
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         });

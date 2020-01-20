@@ -1,27 +1,40 @@
 import App from './app'
-import { ApiController } from './controller/ApiController'
+import { FloydController } from './controller/FloydController'
 import * as bodyParser from 'body-parser'
 import { Middleware } from './middleware/Middleware'
-import { signUpMiddleware } from './middleware/AuthMiddleware'
 import { Config } from './config/Config'
 import { AuthController } from './controller/AuthController'
 import { getMongoInstance } from './config/DB'
+import { verifyToken, allowCrossOrigin } from './middleware/implementations/AuthMiddleware'
+import { socketVerifyToken } from './middleware/implementations/SocketAuthMiddleware'
+import { MessagingSockets } from './sockets/MessagingSockets'
+import cors from 'cors'
 
 
-const config = new Config();
-getMongoInstance(config.connectionString).then(mongoose => {
+getMongoInstance(Config.connectionString).then(mongoose => {
 
   const app = new App(5000,
     //Middleware  
     [
       new Middleware('/', bodyParser.json()),
       new Middleware('/', bodyParser.urlencoded({ extended: true })),
-      //new Middleware('/auth/register', signUpMiddleware)
+      new Middleware('/', cors()),
+      new Middleware('/messaging', verifyToken),
     ],
     //Controller 
-    [ new ApiController('/api'),
-      new AuthController('/auth', mongoose) ]
+    [ new FloydController('/messaging'),
+      new AuthController('/auth') ],
+    //SocketMiddleware
+    [
+      socketVerifyToken,
+    ],
+    //Sockets
+    [
+      new MessagingSockets()
+    ]
   )
-     
+
+    //https.createServer(app);
+
   app.listen()
 })

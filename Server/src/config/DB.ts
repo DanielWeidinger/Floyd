@@ -1,12 +1,13 @@
-import { Mongoose } from 'mongoose'
+import mongoose from 'mongoose'
 
-export async function getMongoInstance(connectionString: string): Promise<Mongoose>{
+export async function getMongoInstance(connectionString: string): Promise<mongoose.Mongoose>{
 
-    const mongoose = new Mongoose({useUnifiedTopology: true})
+    //const mongoose = new Mongoose({useUnifiedTopology: true})
 
     try {
         await mongoose.connect(connectionString, {
-          useNewUrlParser: true
+          useNewUrlParser: true,
+          useUnifiedTopology: true
         });
         console.log("Connected to DB !!");
       } catch (e) {

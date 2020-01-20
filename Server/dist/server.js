@@ -11,22 +11,36 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var app_1 = __importDefault(require("./app"));
-var ApiController_1 = require("./controller/ApiController");
+var FloydController_1 = require("./controller/FloydController");
 var bodyParser = __importStar(require("body-parser"));
 var Middleware_1 = require("./middleware/Middleware");
 var Config_1 = require("./config/Config");
 var AuthController_1 = require("./controller/AuthController");
 var DB_1 = require("./config/DB");
-var config = new Config_1.Config();
-DB_1.getMongoInstance(config.connectionString).then(function (mongoose) {
+var AuthMiddleware_1 = require("./middleware/implementations/AuthMiddleware");
+var SocketAuthMiddleware_1 = require("./middleware/implementations/SocketAuthMiddleware");
+var MessagingSockets_1 = require("./sockets/MessagingSockets");
+var cors_1 = __importDefault(require("cors"));
+DB_1.getMongoInstance(Config_1.Config.connectionString).then(function (mongoose) {
     var app = new app_1.default(5000, 
     //Middleware  
     [
         new Middleware_1.Middleware('/', bodyParser.json()),
         new Middleware_1.Middleware('/', bodyParser.urlencoded({ extended: true })),
+        new Middleware_1.Middleware('/', cors_1.default()),
+        new Middleware_1.Middleware('/messaging', AuthMiddleware_1.verifyToken),
     ], 
     //Controller 
-    [new ApiController_1.ApiController('/api'),
-        new AuthController_1.AuthController('/auth', mongoose)]);
+    [new FloydController_1.FloydController('/messaging'),
+        new AuthController_1.AuthController('/auth')], 
+    //SocketMiddleware
+    [
+        SocketAuthMiddleware_1.socketVerifyToken,
+    ], 
+    //Sockets
+    [
+        new MessagingSockets_1.MessagingSockets()
+    ]);
+    //https.createServer(app);
     app.listen();
 });

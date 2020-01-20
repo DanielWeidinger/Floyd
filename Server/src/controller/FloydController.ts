@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express'
-import IControllable from './IControllable'
+import IControllable from '../contracts/IControllable'
 
-export class ApiController implements IControllable{
+export class FloydController implements IControllable{
     public router: Router = Router();
     private path: string;
 
@@ -16,5 +16,7 @@ export class ApiController implements IControllable{
         this.router.get(this.path, (req, res) => {
             res.send("Running")
         })
+
+        this.router.post
     }
 }
