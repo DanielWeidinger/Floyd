@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PusherService } from 'src/app/services/pusher.service';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-messages',
@@ -13,16 +13,15 @@ export class MessagesComponent implements OnInit {
   userName: string;
   messageText: string;
 
-  constructor(private pusherService: PusherService) {
+  constructor(private socketService: SocketService) {
 
     this.messages = [];
   }
 
   ngOnInit() {
 
-    this.pusherService.messagesChannel.bind('client-new-message', (msg) => {
-      console.log(msg)
-      this.messages.push(msg)
+    this.socketService.listen("message").subscribe((data) => {
+      console.log(data)
     })
 
   }
@@ -32,9 +31,8 @@ export class MessagesComponent implements OnInit {
        user: user,
        text: text,
     }
-
-    this.pusherService.messagesChannel.trigger('client-new-message', message);
-    this.messages.push(message);
+    
+    this.socketService.emit("message", message);
   }
 
 }
