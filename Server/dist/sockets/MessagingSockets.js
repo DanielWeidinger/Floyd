@@ -8,10 +8,13 @@ var MessagingSockets = /** @class */ (function () {
     function MessagingSockets() {
     }
     MessagingSockets.prototype.initSockets = function (io) {
-        io.on('connection', function (socket) {
+        console.log('test');
+        io.sockets.on('connection', function (socket) {
             //const user = User.findById(socket.decoded.user.id)
-            var unreadMessages = Message_1.default.find({ read: true, recipient: socket.decoded });
+            var unreadMessages = Message_1.default.find({ read: true, recipient: socket.user });
+            //console.log(unreadMessages)
             socket.on('message', function (message) {
+                console.log(message);
             });
         });
     };

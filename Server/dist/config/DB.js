@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
-function getMongoInstance(connectionString) {
+function connectMongoInstance(connectionString) {
     return __awaiter(this, void 0, void 0, function () {
         var e_1;
         return __generator(this, function (_a) {
@@ -64,4 +64,4 @@ function getMongoInstance(connectionString) {
         });
     });
 }
-exports.getMongoInstance = getMongoInstance;
+exports.connectMongoInstance = connectMongoInstance;

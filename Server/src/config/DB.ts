@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-export async function getMongoInstance(connectionString: string): Promise<mongoose.Mongoose>{
+export async function connectMongoInstance(connectionString: string): Promise<mongoose.Mongoose>{
 
     //const mongoose = new Mongoose({useUnifiedTopology: true})
 

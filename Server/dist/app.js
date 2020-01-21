@@ -10,7 +10,7 @@ var App = /** @class */ (function () {
     function App(port, middleWare, controllers, socketMiddleware, sockets) {
         this.app = express_1.default();
         this.http = http_1.default.createServer(this.app);
-        this.io = socket_io_1.default(http_1.default);
+        this.io = socket_io_1.default();
         this.port = port;
         this.middlewares(middleWare);
         this.routes(controllers);
@@ -46,6 +46,7 @@ var App = /** @class */ (function () {
         this.http.listen(this.port, function () {
             console.log("App listening on the http://localhost:" + _this.port);
         });
+        this.io.listen(this.http);
     };
     return App;
 }());

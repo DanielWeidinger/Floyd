@@ -10,7 +10,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var app_1 = __importDefault(require("./app"));
+var App_1 = __importDefault(require("./App"));
 var FloydController_1 = require("./controller/FloydController");
 var bodyParser = __importStar(require("body-parser"));
 var Middleware_1 = require("./middleware/Middleware");
@@ -21,13 +21,20 @@ var AuthMiddleware_1 = require("./middleware/implementations/AuthMiddleware");
 var SocketAuthMiddleware_1 = require("./middleware/implementations/SocketAuthMiddleware");
 var MessagingSockets_1 = require("./sockets/MessagingSockets");
 var cors_1 = __importDefault(require("cors"));
-DB_1.getMongoInstance(Config_1.Config.connectionString).then(function (mongoose) {
-    var app = new app_1.default(5000, 
+DB_1.connectMongoInstance(Config_1.Config.connectionString).then(function (mongoose) {
+    var app = new App_1.default(5000, 
     //Middleware  
     [
         new Middleware_1.Middleware('/', bodyParser.json()),
         new Middleware_1.Middleware('/', bodyParser.urlencoded({ extended: true })),
-        new Middleware_1.Middleware('/', cors_1.default()),
+        new Middleware_1.Middleware('/socket.io', cors_1.default({
+            credentials: true,
+            origin: function (origin, callback) {
+                if (Config_1.Config.corsWhitelist.includes(origin))
+                    return callback(null, true);
+                callback(new Error('Not allowed by CORS'));
+            }
+        })),
         new Middleware_1.Middleware('/messaging', AuthMiddleware_1.verifyToken),
     ], 
     //Controller 
@@ -41,6 +48,5 @@ DB_1.getMongoInstance(Config_1.Config.connectionString).then(function (mongoose)
     [
         new MessagingSockets_1.MessagingSockets()
     ]);
-    //https.createServer(app);
     app.listen();
 });

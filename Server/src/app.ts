@@ -8,15 +8,15 @@ import { SocketMiddleware } from './contracts/SocketMiddleware';
 import { ISocketabel } from './contracts/ISocketable';
 
 class App{
-    public app: Application
-    public http: http.Server
+    public app: Application;
+    public http: http.Server;
     public io: socket.Server;
-    public port: number
+    public port: number;
 
     constructor(port: number, middleWare: Middleware[], controllers: IControllable[], socketMiddleware: SocketMiddleware[], sockets: ISocketabel[]){
         this.app = express();
         this.http = http.createServer(this.app);
-        this.io = socket(http);
+        this.io = socket();
         this.port = port;
 
         this.middlewares(middleWare)
@@ -53,6 +53,7 @@ class App{
         this.http.listen(this.port, () => {
             console.log(`App listening on the http://localhost:${this.port}`)
         })
+        this.io.listen(this.http)
     }
 }
 
