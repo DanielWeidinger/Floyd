@@ -1,0 +1,25 @@
+<div>
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span>Floyd</span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div class="container">
+    <mat-card id="card" style="text-align: center; width: 25%; height: 30%">
+      <mat-card-title>
+        login
+      </mat-card-title>
+      <mat-card-content>
+        <mat-form-field>
+          <input matInput placeholder="Username" [(ngModel)]="username" name="username" required>
+        </mat-form-field><br/>
+        <mat-form-field>
+          <input matInput placeholder="Password" [(ngModel)]="password"type="password" name="password" required>
+        </mat-form-field><br/>
+        <button mat-raised-button (click)="login()" color="primary" style="margin-right:5px;">login</button>
+        <button mat-raised-button (click)="this.router.navigate(['register'])" color="primary" style="margin-right:5px;">register</button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
