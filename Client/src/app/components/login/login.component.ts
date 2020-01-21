@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
+    // http service get user
     if (this.username === 'admin' && this.password === 'admin') {
       this.router.navigate(['chat-overview']);
     } else {

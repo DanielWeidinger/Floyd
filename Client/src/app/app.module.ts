@@ -11,6 +11,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
 import { ChatOverviewComponent } from './components/chat-overview/chat-overview.component';
 import {RouterModule} from '@angular/router';
+import {MatGridListModule, MatSidenavModule} from '@angular/material';
+import { RegisterComponent } from './components/register/register.component';
 
 
 @NgModule({
@@ -18,7 +20,8 @@ import {RouterModule} from '@angular/router';
     AppComponent,
     MessagesComponent,
     LoginComponent,
-    ChatOverviewComponent
+    ChatOverviewComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +29,9 @@ import {RouterModule} from '@angular/router';
     CustomMaterialModule,
     FormsModule,
     BrowserAnimationsModule,
-    RouterModule
+    RouterModule,
+    MatSidenavModule,
+    MatGridListModule
   ],
   providers: [PusherService],
   bootstrap: [AppComponent]
