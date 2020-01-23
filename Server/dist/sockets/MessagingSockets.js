@@ -8,7 +8,6 @@ var MessagingSockets = /** @class */ (function () {
     function MessagingSockets() {
     }
     MessagingSockets.prototype.initSockets = function (io) {
-        console.log('test');
         io.sockets.on('connection', function (socket) {
             //const user = User.findById(socket.decoded.user.id)
             var unreadMessages = Message_1.default.find({ read: true, recipient: socket.user });

@@ -27,12 +27,15 @@ DB_1.connectMongoInstance(Config_1.Config.connectionString).then(function (mongo
     [
         new Middleware_1.Middleware('/', bodyParser.json()),
         new Middleware_1.Middleware('/', bodyParser.urlencoded({ extended: true })),
-        new Middleware_1.Middleware('/socket.io', cors_1.default({
+        new Middleware_1.Middleware('/', cors_1.default({
             credentials: true,
             origin: function (origin, callback) {
-                if (Config_1.Config.corsWhitelist.includes(origin))
+                console.log('Origin: ' + origin);
+                console.log(Config_1.Config.corsWhitelist.includes(origin));
+                if ((Config_1.Config.corsWhitelist.includes(origin) || origin === undefined) && !Config_1.Config.production) {
                     return callback(null, true);
-                callback(new Error('Not allowed by CORS'));
+                }
+                callback(new Error('Not allowed by CORS.'));
             }
         })),
         new Middleware_1.Middleware('/messaging', AuthMiddleware_1.verifyToken),

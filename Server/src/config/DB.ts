@@ -9,6 +9,7 @@ export async function connectMongoInstance(connectionString: string): Promise<mo
           useNewUrlParser: true,
           useUnifiedTopology: true
         });
+        
         console.log("Connected to DB !!");
       } catch (e) {
         console.log(e);

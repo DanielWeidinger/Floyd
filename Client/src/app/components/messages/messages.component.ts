@@ -8,31 +8,31 @@ import { SocketService } from 'src/app/services/socket.service';
 })
 export class MessagesComponent implements OnInit {
 
-  private messages: Message[]
+  //private messages: Message[]
 
   userName: string;
   messageText: string;
 
   constructor(private socketService: SocketService) {
 
-    this.messages = [];
+    //this.messages = [];
   }
 
   ngOnInit() {
 
     this.socketService.listen("message").subscribe((data) => {
       console.log(data)
-    })
+    });
 
   }
 
   sendMessage(user: string, text: string) {
-    const message: Message = {
+    /*const message: Message = {
        user: user,
        text: text,
-    }
+    }*/
     
-    this.socketService.emit("message", message);
+    //this.socketService.emit("message", message);
   }
 
 }

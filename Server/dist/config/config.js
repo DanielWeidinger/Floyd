@@ -10,6 +10,7 @@ var Config = /** @class */ (function () {
         'http://localhost:4200',
         'http://localhost:5000'
     ];
+    Config.production = false;
     return Config;
 }());
 exports.Config = Config;

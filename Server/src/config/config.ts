@@ -6,4 +6,5 @@ export class Config{
         'http://localhost:4200',
         'http://localhost:5000'
     ]
+    public static production = false;
 }

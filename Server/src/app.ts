@@ -7,7 +7,7 @@ import socket from 'socket.io';
 import { SocketMiddleware } from './contracts/SocketMiddleware';
 import { ISocketabel } from './contracts/ISocketable';
 
-class App{
+export default class App {
     public app: Application;
     public http: http.Server;
     public io: socket.Server;
@@ -56,5 +56,3 @@ class App{
         this.io.listen(this.http)
     }
 }
-
-export default App

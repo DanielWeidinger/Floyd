@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import * as io from 'socket.io-client'
+import * as io from 'socket.io-client';
 import { AuthService } from './auth.service';
+import { Config } from './Config';
 
 @Injectable({
   providedIn: 'root'
@@ -9,23 +10,22 @@ import { AuthService } from './auth.service';
 export class SocketService {
 
   private socket: SocketIOClient.Socket;
-  private uri: string = "http://localhost:5000";
 
   constructor(private authService: AuthService) {
-    this.socket = io(this.uri, {
+    this.socket = io(Config.uri, {
       query: authService.getToken()
-    })
+    });
   }
 
-  listen(eventName: string){
+  listen(eventName: string) {
     return new Observable((subscriber) => {
-      this.socket.on(eventName, (data) =>{
-        subscriber.next(data)
-      })
-    })
+      this.socket.on(eventName, (data) => {
+        subscriber.next(data);
+      });
+    });
   }
 
-  emit(eventName: string, data: any){
-    this.socket.emit(eventName, data)
+  emit(eventName: string, data: any) {
+    this.socket.emit(eventName, data);
   }
 }

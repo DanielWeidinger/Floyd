@@ -13,6 +13,8 @@ import { ChatOverviewComponent } from './components/chat-overview/chat-overview.
 import {RouterModule} from '@angular/router';
 import {MatGridListModule, MatSidenavModule} from '@angular/material';
 import { RegisterComponent } from './components/register/register.component';
+import { AuthService } from './services/auth.service';
+import { SocketService } from './services/socket.service';
 
 
 @NgModule({
@@ -31,11 +33,12 @@ import { RegisterComponent } from './components/register/register.component';
     BrowserAnimationsModule,
     RouterModule,
     MatSidenavModule,
-    MatGridListModule
+    MatGridListModule,
     HttpClientModule
   ],
   providers: [
-
+    AuthService,
+    SocketService
   ],
   bootstrap: [AppComponent]
 })

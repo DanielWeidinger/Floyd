@@ -6,9 +6,6 @@ import User, { IUser } from "../models/User";
 export class MessagingSockets implements ISocketabel{
 
     initSockets(io: Server): void {
-
-        console.log('test')
-
         io.sockets.on('connection', (socket: any) => {
 
             //const user = User.findById(socket.decoded.user.id)

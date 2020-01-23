@@ -18,13 +18,18 @@ connectMongoInstance(Config.connectionString).then(mongoose => {
     [
       new Middleware('/', bodyParser.json()),
       new Middleware('/', bodyParser.urlencoded({ extended: true })),
-      new Middleware('/socket.io', cors({
-        credentials: true, // This is important.
+      new Middleware('/', cors({ //Development ONLY
+        credentials: true, 
         origin: (origin: any, callback) => {
-          if(Config.corsWhitelist.includes(origin))
+
+          console.log('Origin: ' + origin)
+          console.log(Config.corsWhitelist.includes(origin))
+
+          if((Config.corsWhitelist.includes(origin) || origin === undefined) && !Config.production){
             return callback(null, true)
+          }
       
-            callback(new Error('Not allowed by CORS'));
+            callback(new Error('Not allowed by CORS.'));
         }
       })),
       new Middleware('/messaging', verifyToken),

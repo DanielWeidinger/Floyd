@@ -1,17 +1,40 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Config } from './Config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private token: string = 
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWUyMjAyNGJjMTcyYjAwYWI4YWI3NjFhIn0sImlhdCI6MTU3OTM1NTkwOCwiZXhwIjoxNTgyOTU1OTA4fQ.mgwudms9OIsjMCPRFI3J4vcNz__mWGJ6sJHOqQawAdI";
+  private token: string;
 
-  constructor(private httpService: HttpClient) { }
+  constructor(private httpService: HttpClient) {}
 
-  public getToken(): string{
+  public updateToken(givenUsername: string, givenPassword: string): boolean {
+
+    const body = new HttpParams();
+    body.set('username', givenUsername);
+    body.set('password', givenPassword);
+
+    this.httpService.post(Config.uri + '/login', body,
+    {
+      observe: 'response'
+    })
+    .subscribe((result) => {
+      if (result.status === 200) {
+        console.log(result);
+        this.token = result.body.toString();
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    return false;
+  }
+
+  public getToken(): string {
     return this.token;
   }
 }
