@@ -1,0 +1,17 @@
+<mat-card>
+  <mat-card-title>
+    Login
+  </mat-card-title>
+  <mat-card-content>
+    <mat-form-field>
+      <input matInput placeholder="Username" [(ngModel)]="username" name="username" required>
+    </mat-form-field><br/>
+    <mat-form-field>
+      <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" required>
+    </mat-form-field><br/>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="login()" color="primary" style="margin-right:5px;">login</button>
+    <button mat-raised-button (click)="this.router.navigate(['register'])" color="primary" style="margin-right:5px;">register</button>
+  </mat-card-actions>
+</mat-card>

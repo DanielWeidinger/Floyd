@@ -47,107 +47,107 @@ export class AuthController implements IControllable {
     }
 
     private async handleSignUp(req: Request, res: Response) {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({
-                errors: errors.array()
-            });
-        }
-        const { username, password } = req.body;
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+          return res.status(400).json({
+              errors: errors.array()
+          });
+      }
+      const { username, password } = req.body;
 
-        try {
-            let user = await User.findOne({
-                username
-            });
-            if (user) {
-                return res.status(400).json({
-                    msg: "User Already Exists"
-                });
-            }
+      try {
+          let user = await User.findOne({
+              username
+          });
+          if (user) {
+              return res.status(400).json({
+                  msg: "User Already Exists"
+              });
+          }
 
-            const salt = await bcrypt.genSalt(10);
-            const passwordHash = await bcrypt.hash(password, salt);
-            user = new User({
-                username,
-                passwordHash,
-                salt
-            });
-            await user.save();
+          const salt = await bcrypt.genSalt(10);
+          const passwordHash = await bcrypt.hash(password, salt);
+          user = new User({
+              username,
+              passwordHash,
+              salt
+          });
+          await user.save();
 
-            const payload = {
-                user: {
-                    id: user.id
-                }
-            };
+          const payload = {
+              user: {
+                  id: user.id
+              }
+          };
 
-            sign(
-                payload,
-                Config.secret, {
-                    expiresIn: Config.tokenExpiration
-                },
-                (err, token) => {
-                    if (err) throw err;
-                    res.status(200).json({
-                        token
-                    });
-                }
-            );
-        } catch (err) {
-            console.log(err.message);
-            res.status(500).send("Error in Saving");
-        }
+          sign(
+              payload,
+              Config.secret, {
+                  expiresIn: Config.tokenExpiration
+              },
+              (err, token) => {
+                  if (err) throw err;
+                  res.status(200).json({
+                      token
+                  });
+              }
+          );
+      } catch (err) {
+          console.log(err.message);
+          res.status(500).send("Error in Saving");
+      }
     }
 
     private async handleLogin(req: Request, res: Response) {
-        const errors = validationResult(req);
-    
-        if (!errors.isEmpty()) {
+      const errors = validationResult(req);
+  
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          errors: errors.array()
+        });
+      }
+  
+      const { email, password } = req.body;
+      try {
+        let user = await User.findOne({
+          email
+        });
+        if (!user)
           return res.status(400).json({
-            errors: errors.array()
+            message: "User Not Exist"
           });
-        }
-    
-        const { email, password } = req.body;
-        try {
-          let user = await User.findOne({
-            email
+  
+        const isMatch = await bcrypt.compare(password, user.passwordHash);
+        if (!isMatch)
+          return res.status(400).json({
+            message: "Incorrect Password !"
           });
-          if (!user)
-            return res.status(400).json({
-              message: "User Not Exist"
+  
+        const payload = {
+          user: {
+            id: user.id
+          }
+        };
+  
+        sign(
+          payload,
+          Config.secret,
+          {
+            expiresIn: Config.tokenExpiration
+          },
+          (err, token) => {
+            if (err) throw err;
+            res.status(200).json({
+              token
             });
-    
-          const isMatch = await bcrypt.compare(password, user.passwordHash);
-          if (!isMatch)
-            return res.status(400).json({
-              message: "Incorrect Password !"
-            });
-    
-          const payload = {
-            user: {
-              id: user.id
-            }
-          };
-    
-          sign(
-            payload,
-            Config.secret,
-            {
-              expiresIn: Config.tokenExpiration
-            },
-            (err, token) => {
-              if (err) throw err;
-              res.status(200).json({
-                token
-              });
-            }
-          );
-        } catch (e) {
-          console.error(e);
-          res.status(500).json({
-            message: "Server Error"
-          });
-        }
+          }
+        );
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({
+          message: "Server Error"
+        });
+      }
     }
 
 }

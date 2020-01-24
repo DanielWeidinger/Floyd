@@ -1,0 +1,11 @@
+.chat{
+  overflow-x: hidden;
+  overflow-y: scroll;
+  white-space: nowrap;
+  margin: 1em;
+  height: 92%;
+}
+
+.textInput{
+  margin: 1em;
+}

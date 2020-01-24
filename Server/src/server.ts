@@ -1,4 +1,4 @@
-import App from './App'
+import App from './app'
 import { FloydController } from './controller/FloydController'
 import * as bodyParser from 'body-parser'
 import { Middleware } from './middleware/Middleware'
@@ -19,16 +19,11 @@ connectMongoInstance(Config.connectionString).then(mongoose => {
       new Middleware('/', bodyParser.json()),
       new Middleware('/', bodyParser.urlencoded({ extended: true })),
       new Middleware('/', cors({ //Development ONLY
-        credentials: true, 
+        //credentials: true, 
         origin: (origin: any, callback) => {
-
-          console.log('Origin: ' + origin)
-          console.log(Config.corsWhitelist.includes(origin))
-
-          if((Config.corsWhitelist.includes(origin) || origin === undefined) && !Config.production){
+          if((Config.corsWhitelist.includes(origin) || origin === undefined) && !Config.production)
             return callback(null, true)
-          }
-      
+          
             callback(new Error('Not allowed by CORS.'));
         }
       })),

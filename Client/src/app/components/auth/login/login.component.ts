@@ -19,12 +19,12 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    // http service get user
-    console.log('Jo lol');
-    if (this.authService.updateToken(this.username, this.password)) {
-      this.router.navigate(['chat-overview']);
-    } else {
-      alert('Invalid credentials');
-    }
+    this.authService.updateToken(this.username, this.password).subscribe(success => {
+      if (success) {
+        this.router.navigate(['chat-overview']);
+      } else {
+        alert('Invalid credentials');
+      }
+    });
   }
 }

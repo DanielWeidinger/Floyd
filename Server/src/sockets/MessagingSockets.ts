@@ -5,18 +5,63 @@ import User, { IUser } from "../models/User";
 
 export class MessagingSockets implements ISocketabel{
 
+    connectedUserMap: Map<string, string> = new Map();
+
     initSockets(io: Server): void {
-        io.sockets.on('connection', (socket: any) => {
+        io.on('connection', (socket: Socket) => {
+            User.findById(socket.decoded.user.id).exec((err, dbUser) => {
+                if(err){
+                    throw err;
+                }
 
-            //const user = User.findById(socket.decoded.user.id)
+                if(!dbUser){
+                    throw new Error("Socket: User not found")
+                }
+                
+                const user: IUser = dbUser;
 
-            const unreadMessages = Message.find({ read: true, recipient: socket.user })
+                this.connectedUserMap.set(user.username, socket.id);
 
-            //console.log(unreadMessages)
+                Message.find({ read: true, recipient: user._id }).exec((err, messages) => { //TODO neues Message Model für Client!!!
+                    if(err){
 
-            socket.on('message', (message: IMessage) => {
-                console.log(message)
-            })
+                        return socket.emit("error", err.message) //TODO error event client
+                    }          
+
+                    messages.forEach(message => {
+                        socket.emit("message", message);
+                    })
+                });
+
+                socket.on('message', (message: IMessage) => {
+                    User.findOne({username: message.recipient}).exec((err, dbRecipient) => {
+                        if(err){
+                            throw err;
+                        }
+
+                        if(!dbRecipient){
+                            return socket.emit("error", "Recipient not found!")
+                        }
+
+                        message.recipient = dbRecipient._id;
+
+                        Message.insertMany([message], (err, dbMessage) => {
+                            if(err){
+                                throw err;
+                            }
+                            
+                            //Send if user is online
+                            const recipient = this.connectedUserMap.get(message.recipient)
+                            if(!recipient){
+                                throw new Error("Socket: Recipient not found");
+                            }
+                            io.to(recipient).emit("message", message)
+                        });
+                    });
+                });
+            });
+
+            
         })
     }
 

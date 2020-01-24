@@ -7,7 +7,7 @@ function socketVerifyToken(socket, next) {
         jsonwebtoken_1.verify(socket.handshake.query.token, Config_1.Config.secret, function (err, decoded) {
             if (err)
                 return next(new Error('Authentication error'));
-            socket.user = decoded;
+            socket.decoded = decoded;
             next();
         });
     }

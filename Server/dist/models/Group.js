@@ -12,6 +12,10 @@ var GroupSchema = new mongoose_1.Schema({
     name: {
         type: String,
         required: true
+    },
+    users: {
+        type: String,
+        required: true
     }
 });
 exports.default = mongoose_1.default.model('Group', GroupSchema);

@@ -1,0 +1,19 @@
+<mat-card>
+  <mat-card-title>
+    register
+  </mat-card-title>
+  <mat-card-content>
+    <mat-form-field>
+      <input matInput placeholder="Username" [(ngModel)]="username" name="username" required>
+    </mat-form-field><br/>
+    <mat-form-field>
+      <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" required>
+    </mat-form-field><br/>
+    <mat-form-field>
+      <input matInput placeholder="Confirm Password" [(ngModel)]="passwordAgain" type="password" name="password" required>
+    </mat-form-field><br/>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="register()" color="primary">register</button>
+  </mat-card-actions>
+</mat-card>

@@ -10,7 +10,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var App_1 = __importDefault(require("./App"));
+var app_1 = __importDefault(require("./app"));
 var FloydController_1 = require("./controller/FloydController");
 var bodyParser = __importStar(require("body-parser"));
 var Middleware_1 = require("./middleware/Middleware");
@@ -22,19 +22,16 @@ var SocketAuthMiddleware_1 = require("./middleware/implementations/SocketAuthMid
 var MessagingSockets_1 = require("./sockets/MessagingSockets");
 var cors_1 = __importDefault(require("cors"));
 DB_1.connectMongoInstance(Config_1.Config.connectionString).then(function (mongoose) {
-    var app = new App_1.default(5000, 
+    var app = new app_1.default(5000, 
     //Middleware  
     [
         new Middleware_1.Middleware('/', bodyParser.json()),
         new Middleware_1.Middleware('/', bodyParser.urlencoded({ extended: true })),
         new Middleware_1.Middleware('/', cors_1.default({
-            credentials: true,
+            //credentials: true, 
             origin: function (origin, callback) {
-                console.log('Origin: ' + origin);
-                console.log(Config_1.Config.corsWhitelist.includes(origin));
-                if ((Config_1.Config.corsWhitelist.includes(origin) || origin === undefined) && !Config_1.Config.production) {
+                if ((Config_1.Config.corsWhitelist.includes(origin) || origin === undefined) && !Config_1.Config.production)
                     return callback(null, true);
-                }
                 callback(new Error('Not allowed by CORS.'));
             }
         })),

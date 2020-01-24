@@ -9,6 +9,10 @@ export interface IUser extends Document {
     contacts: IUser['_id'][]
 }
 
+export interface UserView {
+    username: IUser['username']
+}
+
 const UserSchema: Schema = new Schema({
     username: {
         type: String,
