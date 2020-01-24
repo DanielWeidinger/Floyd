@@ -51,4 +51,31 @@ export class AuthService {
   public getUsername(): string {
     return this.username;
   }
+
+  public getContacts(): Observable<string> {
+    return new Observable<string>(observer => {
+      this.httpService.get(Config.uri + '/messaging/contacts', {headers: {
+        token: this.getToken()
+      }}).subscribe(contracts => {
+        console.log(contracts);
+      });
+    });
+  }
+
+  public addContacts(givenContactUsername: string): Observable<string> {
+    return new Observable<string>(observer => {
+      this.httpService.post(Config.uri + '/messaging/contact',
+      {
+        headers: {
+          token: this.getToken()
+        },
+        body: {
+          contactUsername: givenContactUsername
+        }
+      })
+      .subscribe(contracts => {
+        console.log(contracts);
+      });
+    });
+  }
 }

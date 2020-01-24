@@ -38,7 +38,7 @@ var MessagingSockets = /** @class */ (function () {
                             return socket.emit("error", "Recipient not found!");
                         }
                         message.recipient = dbRecipient._id;
-                        Message_1.default.insertMany([message], function (err, dbMessage) {
+                        message.save(function (err, dbMessage) {
                             if (err) {
                                 throw err;
                             }

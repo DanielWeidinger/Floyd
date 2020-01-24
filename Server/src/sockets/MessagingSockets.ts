@@ -45,7 +45,7 @@ export class MessagingSockets implements ISocketabel{
 
                         message.recipient = dbRecipient._id;
 
-                        Message.insertMany([message], (err, dbMessage) => {
+                        message.save((err, dbMessage) => {
                             if(err){
                                 throw err;
                             }
