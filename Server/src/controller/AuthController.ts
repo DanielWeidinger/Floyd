@@ -93,7 +93,6 @@ export class AuthController implements IControllable {
               }
           );
       } catch (err) {
-          console.log(err.message);
           res.status(500).send("Error in Saving");
       }
     }
@@ -107,20 +106,20 @@ export class AuthController implements IControllable {
         });
       }
   
-      const { email, password } = req.body;
+      const { username, password } = req.body;
       try {
         let user = await User.findOne({
-          email
+          username
         });
         if (!user)
           return res.status(400).json({
             message: "User Not Exist"
           });
-  
+
         const isMatch = await bcrypt.compare(password, user.passwordHash);
         if (!isMatch)
           return res.status(400).json({
-            message: "Incorrect Password !"
+            message: "Incorrect Password!"
           });
   
         const payload = {

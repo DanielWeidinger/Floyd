@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Chat } from './Chat';
-import { IMessage } from '../../../../../../../Server/src/models/Message';
+import { MessageDto } from '../../../../../../../Server/src/models/Message';
 import { SocketService } from 'src/app/services/socket.service';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -15,7 +15,7 @@ export class ChatComponent implements OnInit {
   @Input() chat: Chat;
   text = '';
 
-  messages: IMessage[];
+  messages: MessageDto[];
 
   constructor(private socketService: SocketService, private authService: AuthService) {
   }
@@ -25,7 +25,7 @@ export class ChatComponent implements OnInit {
     const listener = this.socketService.listen('message');
 
     if (listener !== null) {
-      listener.subscribe((result: IMessage) => {
+      listener.subscribe((result: MessageDto) => {
         this.messages.push(result);
       });
     }
@@ -33,8 +33,8 @@ export class ChatComponent implements OnInit {
 
   sendMessage() {
 
-    const data: IMessage = {
-      user: this.authService.getUsername,
+    const data: MessageDto = {
+      username: this.authService.getUsername(),
       recipient: this.chat.recipient.username,
       text: this.text,
       timestamp: new Date(),
@@ -43,5 +43,4 @@ export class ChatComponent implements OnInit {
 
     this.socketService.emit('message', data);
   }
-
 }

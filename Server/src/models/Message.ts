@@ -9,6 +9,14 @@ export interface IMessage extends Document {
     read: boolean
 }
 
+export interface MessageDto{
+    username: IUser['username'],
+    recipient: IUser['username'],
+    text: IMessage['text'],
+    timestamp: IMessage['timestamp'],
+    read: IMessage['read']
+}
+
 const MessageSchema: Schema = new Schema({
     user: {
         type: String,

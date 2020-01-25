@@ -1,5 +1,7 @@
-import { UserView } from '../../../../../../../Server/src/models/User';
+import { UserDto } from '../../../../../../../Server/src/models/User';
+import { MessageDto } from '../../../../../../../Server/src/models/Message';
 
 export interface Chat {
-  recipient: UserView;
+  recipient: UserDto;
+  messages: MessageDto[];
 }

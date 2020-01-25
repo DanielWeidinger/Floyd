@@ -29,7 +29,10 @@ var FloydController = /** @class */ (function () {
                     if (err) {
                         throw err;
                     }
-                    res.send({ contracts: dbContracts.map(function (contact) { return contact.username; }) });
+                    var payload = dbContracts.map(function (contact) {
+                        return { username: contact.username };
+                    });
+                    res.send(payload);
                 });
             });
         });
@@ -47,14 +50,22 @@ var FloydController = /** @class */ (function () {
                         throw err;
                     }
                     if (!dbContact) {
-                        throw new Error("REST: Contact not found!");
+                        return res.status(400).json({ message: "user not found" });
                     }
-                    dbUser.contacts.push(dbContact._id);
-                    dbUser.save(function (err) {
+                    User_1.default.exists({ "_id": dbUser._id, "contacts": { $in: [dbContact._id] } }, function (err, exists) {
                         if (err) {
                             throw err;
                         }
-                        res.send({ contacts: dbUser.contacts.map(function (contact) { return contact.username; }) });
+                        if (exists) {
+                            return res.status(400).json({ message: "already added to contacts!" });
+                        }
+                        dbUser.contacts.push(dbContact._id);
+                        dbUser.save(function (err) {
+                            if (err) {
+                                throw err;
+                            }
+                            return res.send({ username: newContact });
+                        });
                     });
                 });
             });

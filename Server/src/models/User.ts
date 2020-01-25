@@ -9,7 +9,7 @@ export interface IUser extends Document {
     contacts: IUser['_id'][]
 }
 
-export interface UserView {
+export interface UserDto {
     username: IUser['username']
 }
 

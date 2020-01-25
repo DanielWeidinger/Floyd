@@ -129,7 +129,6 @@ var AuthController = /** @class */ (function () {
                         return [3 /*break*/, 7];
                     case 6:
                         err_1 = _b.sent();
-                        console.log(err_1.message);
                         res.status(500).send("Error in Saving");
                         return [3 /*break*/, 7];
                     case 7: return [2 /*return*/];
@@ -139,7 +138,7 @@ var AuthController = /** @class */ (function () {
     };
     AuthController.prototype.handleLogin = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var errors, _a, email, password, user, isMatch, payload, e_1;
+            var errors, _a, username, password, user, isMatch, payload, e_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -149,12 +148,12 @@ var AuthController = /** @class */ (function () {
                                     errors: errors.array()
                                 })];
                         }
-                        _a = req.body, email = _a.email, password = _a.password;
+                        _a = req.body, username = _a.username, password = _a.password;
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 4, , 5]);
                         return [4 /*yield*/, User_1.default.findOne({
-                                email: email
+                                username: username
                             })];
                     case 2:
                         user = _b.sent();
@@ -167,7 +166,7 @@ var AuthController = /** @class */ (function () {
                         isMatch = _b.sent();
                         if (!isMatch)
                             return [2 /*return*/, res.status(400).json({
-                                    message: "Incorrect Password !"
+                                    message: "Incorrect Password!"
                                 })];
                         payload = {
                             user: {

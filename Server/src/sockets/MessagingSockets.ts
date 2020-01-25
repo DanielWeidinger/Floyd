@@ -8,7 +8,7 @@ export class MessagingSockets implements ISocketabel{
     connectedUserMap: Map<string, string> = new Map();
 
     initSockets(io: Server): void {
-        io.on('connection', (socket: Socket) => {
+        io.on('connection', (socket: any) => {
             User.findById(socket.decoded.user.id).exec((err, dbUser) => {
                 if(err){
                     throw err;

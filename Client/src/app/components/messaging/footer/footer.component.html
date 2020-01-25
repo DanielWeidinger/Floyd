@@ -2,5 +2,5 @@
   <div *ngFor="let user of users">
     <app-chat-partner [user]=user></app-chat-partner>
   </div>
-  <button mat-raised-button>ADD CONTACT</button>
+  <button mat-raised-button (click)="addContact()">ADD CONTACT</button>
 </mat-toolbar >

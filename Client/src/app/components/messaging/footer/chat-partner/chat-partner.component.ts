@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UserView } from '../../../../../../../Server/src/models/User';
+import { UserDto } from '../../../../../../../Server/src/models/User';
 
 
 @Component({
@@ -9,7 +9,7 @@ import { UserView } from '../../../../../../../Server/src/models/User';
 })
 export class ChatPartnerComponent implements OnInit {
 
-  @Input() user: UserView;
+  @Input() user: UserDto;
 
   constructor() { }
 

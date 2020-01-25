@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express'
 import IControllable from '../contracts/IControllable'
 import User from '../models/User';
+import { UserDto } from '../models/User';
 
 export class FloydController implements IControllable{
     public router: Router = Router();
@@ -35,7 +36,11 @@ export class FloydController implements IControllable{
                         throw err;
                     }
 
-                    res.send({contracts: dbContracts.map(contact => contact.username)});
+                    const payload: UserDto[] = dbContracts.map(contact => {
+                        return {username: contact.username}
+                    }); 
+
+                    res.send(payload);
                 });
             });
         });
@@ -57,17 +62,28 @@ export class FloydController implements IControllable{
                         throw err;
                     }
                     if(!dbContact){
-                        throw new Error("REST: Contact not found!");
+                        return res.status(400).json({message: "user not found"});
                     }
                     
-                    dbUser.contacts.push(dbContact._id);
-                    dbUser.save((err) => {
+                    User.exists({"_id": dbUser._id, "contacts": {$in: [dbContact._id]}}, (err, exists) => {
                         if(err){
                             throw err;
                         }
 
-                        res.send({contacts: dbUser.contacts.map(contact => contact.username)});
+
+                        if(exists){
+                            return res.status(400).json({message: "already added to contacts!"});
+                        }
+
+                        dbUser.contacts.push(dbContact._id);
+                        dbUser.save((err) => {
+                        if(err){
+                            throw err;
+                        }
+    
+                        return res.send({username: newContact});
                     });
+                    })
                 });
             });
         })

@@ -20,6 +20,8 @@ import { ChatComponent } from './components/messaging/chat-overview/chat/chat.co
 import { FooterComponent } from './components/messaging/footer/footer.component';
 import { ChatPartnerComponent } from './components/messaging/footer/chat-partner/chat-partner.component';
 import { MessageComponent } from './components/messaging/chat-overview/chat/message/message.component';
+import { MessagingService } from './services/messaging.service';
+import { AddContactDialogComponent } from './components/messaging/dialogs/add-contact-dialog/add-contact-dialog.component';
 
 
 @NgModule({
@@ -32,7 +34,8 @@ import { MessageComponent } from './components/messaging/chat-overview/chat/mess
     ChatComponent,
     FooterComponent,
     ChatPartnerComponent,
-    MessageComponent
+    MessageComponent,
+    AddContactDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -50,8 +53,10 @@ import { MessageComponent } from './components/messaging/chat-overview/chat/mess
   ],
   providers: [
     AuthService,
-    SocketService
+    SocketService,
+    MessagingService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AddContactDialogComponent]
 })
 export class AppModule { }
