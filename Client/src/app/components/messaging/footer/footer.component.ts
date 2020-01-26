@@ -1,9 +1,12 @@
+import { MatDialog } from '@angular/material';
 import { Component, OnInit, Input } from '@angular/core';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+
 import { IGroup } from '../../../../../../Server/src/models/Group';
 import { UserDto } from '../../../../../../Server/src/models/User';
 import { MessagingService } from 'src/app/services/messaging.service';
-import { MatDialog } from '@angular/material';
 import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
+import { Chat } from '../chat-overview/chat/Chat';
 
 @Component({
   selector: 'app-footer',
@@ -12,14 +15,14 @@ import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-con
 })
 export class FooterComponent implements OnInit {
 
-  @Input() users: UserDto[];
+  @Input() chats: Chat[];
   groups: IGroup[];
 
   constructor(private messagingService: MessagingService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.messagingService.getContacts().subscribe((result: UserDto[]) => {
-      this.users = result;
+      this.chats = result.map(user => this.createChat(user));
     });
   }
 
@@ -32,8 +35,23 @@ export class FooterComponent implements OnInit {
       }
 
       this.messagingService.addContacts(contact.username).subscribe((result: UserDto) => {
-        this.users.push(result);
+        this.chats.push(this.createChat(result));
       });
     });
+  }
+
+  drop(event: CdkDragDrop<Chat[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,
+                        event.container.data,
+                        event.previousIndex,
+                        event.currentIndex);
+    }
+  }
+
+  createChat(user: UserDto): Chat {
+    return {recipient: user, messages: null}
   }
 }

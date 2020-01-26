@@ -2,4 +2,18 @@
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
+  height: 100%;
+}
+
+.chat-partner{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

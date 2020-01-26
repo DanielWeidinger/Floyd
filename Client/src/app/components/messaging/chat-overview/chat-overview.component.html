@@ -1,9 +1,17 @@
 <div fxLayout="column" fxFlexFill>
 
-  <div fxFlex="85%" fxLayout="row" fxLayoutGap>
+  <div fxFlex="85%" fxLayout="row" id="chat-overview-list"
+  cdkDropListConnectedTo="footer-list"
+  cdkDropList [cdkDropListData]="currentChats" (cdkDropListDropped)="drop($event)">
 
-    <div *ngFor="let chat of currentChats" fxFlex>
+    <div class="chat" *ngFor="let chat of currentChats" fxFlex cdkDrag>
       <app-chat [chat]="chat"></app-chat>
+      <div *cdkDragPreview>
+        <app-chat [chat]="chat"></app-chat>
+      </div>
+      <div *cdkDragPlaceholder>
+        <app-chat-partner [user]="chat.recipient"></app-chat-partner>
+      </div>
     </div>
   </div>
 

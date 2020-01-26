@@ -6,6 +6,7 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 import { MatGridListModule, MatSidenavModule, MatListModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppComponent } from './app.component';
 import { CustomMaterialModule } from './material/material.module';
@@ -49,7 +50,8 @@ import { AddContactDialogComponent } from './components/messaging/dialogs/add-co
     MatGridListModule,
     HttpClientModule,
     FlexLayoutModule,
-    MatListModule
+    MatListModule,
+    DragDropModule
   ],
   providers: [
     AuthService,

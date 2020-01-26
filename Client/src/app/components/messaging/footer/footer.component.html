@@ -1,6 +1,19 @@
-<mat-toolbar color="primary" fxFill class="toolbar">
-  <div *ngFor="let user of users">
-    <app-chat-partner [user]=user></app-chat-partner>
+<mat-toolbar color="primary" fxFill>
+
+  <div fxFlex fxLayout="row" class="toolbar" id="footer-list"
+  cdkDropListConnectedTo="chat-overview-list"
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  [cdkDropListData]="chats"
+  (cdkDropListDropped)="drop($event)">
+
+    <div class="chat-partner" *ngFor="let chat of chats" cdkDrag>
+      <app-chat-partner [user]="chat.recipient"></app-chat-partner>
+      <div *cdkDragPreview>
+        <app-chat [chat]="chat"></app-chat>
+      </div>
+    </div>
+
   </div>
   <button mat-raised-button (click)="addContact()">ADD CONTACT</button>
 </mat-toolbar >
