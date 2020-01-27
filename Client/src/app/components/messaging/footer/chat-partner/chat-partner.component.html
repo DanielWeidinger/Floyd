@@ -1,9 +1,10 @@
-<mat-card matBadge='0' matBadgePosition="above after" matB class="user">
+<mat-card [matBadge]='getBadgeCount()' matBadgePosition="above after" class="user">
 
-  <div>
-    LOLOLOL
-  </div>
+  <mat-icon>
+    account_circle
+  </mat-icon>
+
   <span >
-    {{this.user.username}}
+    {{this.chat.recipient.username}}
   </span>
 </mat-card>

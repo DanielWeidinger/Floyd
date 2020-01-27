@@ -79,7 +79,8 @@ var FloydController = /** @class */ (function () {
                 if (!dbUser) {
                     throw new Error('REST: User not found');
                 }
-                Message_1.default.find({ "$or": [{ recipient: dbUser.username }, { username: dbUser.username }] }, function (err, dbMessages) {
+                Message_1.default.find({ "$and": [{ "$or": [{ recipient: dbUser.username }, { username: dbUser.username }] },
+                        { read: true }] }, function (err, dbMessages) {
                     if (err) {
                         throw err;
                     }

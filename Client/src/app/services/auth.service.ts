@@ -4,6 +4,7 @@ import { Config } from './Config';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserDto } from '../../../../Server/src/models/User';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,13 @@ export class AuthService {
   private token: string;
   private user: UserDto;
 
-  constructor(private httpService: HttpClient, private router: Router) {}
+  constructor(private httpService: HttpClient, private cookieService: CookieService, private router: Router) {
+    this.token = cookieService.get('token');
+    const userString = cookieService.get('user');
+    if (userString) {
+      this.user = JSON.parse(userString);
+    }
+  }
 
   public updateToken(givenUsername: string, givenPassword: string): Observable<boolean> {
 
@@ -30,7 +37,9 @@ export class AuthService {
         switch (result.status) {
           case 200:
             this.token = result.body.token;
-            this.user = { username: givenUsername };
+            this.user = this.createUser(givenUsername);
+            this.cookieService.set('token', this.token);
+            this.cookieService.set('user', JSON.stringify(this.user));
             return observer.next(true);
           default:
             return observer.next(false);
@@ -46,6 +55,10 @@ export class AuthService {
     }
 
     return this.token;
+  }
+
+  public createUser(givenUsername: string): UserDto {
+    return {username: givenUsername };
   }
 
   public getUser(): UserDto {

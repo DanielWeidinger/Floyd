@@ -18,7 +18,7 @@ export class MessagingService {
     this.socketService.emit('message', message);
   }
 
-  public recieveMessages(): Observable<MessageDto> {
+  public receiveMessages(): Observable<MessageDto> {
 
     const listener = this.socketService.listen('message');
 

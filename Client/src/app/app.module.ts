@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatBadgeModule } from '@angular/material/badge';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppComponent } from './app.component';
 import { CustomMaterialModule } from './material/material.module';
@@ -60,7 +61,8 @@ import { UserInfoComponent } from './components/messaging/footer/user-info/user-
   providers: [
     AuthService,
     SocketService,
-    MessagingService
+    MessagingService,
+    CookieService
   ],
   bootstrap: [AppComponent],
   entryComponents: [AddContactDialogComponent]

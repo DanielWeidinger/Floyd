@@ -7,10 +7,10 @@
     <div class="chat" *ngFor="let chat of currentChats" fxFlex cdkDrag>
       <app-chat [chat]="chat"></app-chat>
       <div *cdkDragPreview>
-        <app-chat [chat]="chat"></app-chat>
+        <app-chat [isPreview]="true" [chat]="chat"></app-chat>
       </div>
       <div *cdkDragPlaceholder>
-        <app-chat-partner [user]="chat.recipient"></app-chat-partner>
+        <app-chat-partner [chat]="chat"></app-chat-partner>
       </div>
     </div>
   </div>

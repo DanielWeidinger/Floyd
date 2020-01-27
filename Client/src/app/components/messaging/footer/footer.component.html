@@ -10,9 +10,9 @@
   (cdkDropListDropped)="drop($event)">
 
     <div class="chat-partner" *ngFor="let chat of chats" cdkDrag>
-      <app-chat-partner [user]="chat.recipient"></app-chat-partner>
+      <app-chat-partner [chat]="chat"></app-chat-partner>
       <div *cdkDragPreview>
-        <app-chat [chat]="chat"></app-chat>
+        <app-chat [isPreview]="true" [chat]="{recipient: chat.recipient}"></app-chat>
       </div>
     </div>
 

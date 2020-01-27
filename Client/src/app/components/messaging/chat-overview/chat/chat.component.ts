@@ -13,6 +13,7 @@ import { MessagingService } from 'src/app/services/messaging.service';
 })
 export class ChatComponent implements OnInit {
 
+  @Input() isPreview = false;
   @Input() chat: Chat;
   you: UserDto;
   text = '';
@@ -24,16 +25,20 @@ export class ChatComponent implements OnInit {
 
   ngOnInit() {
 
-    this.messagingService.getMessages().subscribe((history: MessageDto[]) => {
-      this.chat.messages = history.filter(message => message.username === this.chat.recipient.username);
-    });
+    if (!this.isPreview) {
+      this.messagingService.getMessages().subscribe((history: MessageDto[]) => {
+        console.log(history)
+        this.chat.messages = history
+        .filter(message => (message.username === this.you.username || message.recipient === this.you.username) &&
+                           (message.recipient === this.chat.recipient.username || message.username === this.chat.recipient.username));
+      });
 
-    this.messagingService.recieveMessages().subscribe((result: MessageDto) => {
-      if (result.username !== this.you.username && result.username === this.chat.recipient.username) {
-        console.log(result)
-        this.chat.messages.push(result);
-      }
-    });
+      this.messagingService.receiveMessages().subscribe((result: MessageDto) => {
+        if (result.username === this.chat.recipient.username && result.recipient === this.you.username) {
+          this.chat.messages.push(result);
+        }
+      });
+    }
   }
 
   sendMessage() {

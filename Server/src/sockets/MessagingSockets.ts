@@ -27,7 +27,7 @@ export class MessagingSockets implements ISocketabel{
                     }
 
                     messages.forEach(message => {
-                        this.sendMessage("inbox", io, socket.id, message.recipient, dbUser.username, message);
+                        this.sendMessage("message", io, socket.id, message.recipient, dbUser.username, message);
                     })
                 });
 
@@ -72,9 +72,8 @@ export class MessagingSockets implements ISocketabel{
                 recipient: recipientName,
                 text: message.text,
                 timestamp: message.timestamp,
-                read: message.read,
+                read: false,
             }
-            console.log(messageDto)
             io.to(socketId).emit(event, messageDto)
         })
     }

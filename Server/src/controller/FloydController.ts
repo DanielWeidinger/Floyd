@@ -99,11 +99,11 @@ export class FloydController implements IControllable{
                     throw new Error('REST: User not found');
                 }
 
-                Message.find({"$or": [{recipient: dbUser.username}, { username: dbUser.username}] }, (err, dbMessages) => {
+                Message.find({"$and": [{"$or": [{recipient: dbUser.username}, { username: dbUser.username}] },
+                                        {read: true}]}, (err, dbMessages) => {
                     if(err){
                         throw err;
                     }
-
 
                     const messages: MessageDto[] = dbMessages.map(message => {
                         return {

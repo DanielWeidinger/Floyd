@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UserDto } from '../../../../../../../Server/src/models/User';
+import { Chat } from '../../chat-overview/chat/Chat';
 
 
 @Component({
@@ -9,11 +9,15 @@ import { UserDto } from '../../../../../../../Server/src/models/User';
 })
 export class ChatPartnerComponent implements OnInit {
 
-  @Input() user: UserDto;
+  @Input() chat: Chat;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  getBadgeCount(): number {
+    return 42;
   }
 
 }

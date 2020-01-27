@@ -25,7 +25,7 @@ var MessagingSockets = /** @class */ (function () {
                         return socket.emit("error", err.message); //TODO error event client
                     }
                     messages.forEach(function (message) {
-                        _this.sendMessage("inbox", io, socket.id, message.recipient, dbUser.username, message);
+                        _this.sendMessage("message", io, socket.id, message.recipient, dbUser.username, message);
                     });
                 });
                 socket.on('message', function (message) {
@@ -63,9 +63,8 @@ var MessagingSockets = /** @class */ (function () {
                 recipient: recipientName,
                 text: message.text,
                 timestamp: message.timestamp,
-                read: message.read,
+                read: false,
             };
-            console.log(messageDto);
             io.to(socketId).emit(event, messageDto);
         });
     };
