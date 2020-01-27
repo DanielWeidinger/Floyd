@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Chat } from './Chat';
 import { MessageDto } from '../../../../../../../Server/src/models/Message';
-import { SocketService } from 'src/app/services/socket.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { UserDto } from '../../../../../../../Server/src/models/User';
+import { MessagingService } from 'src/app/services/messaging.service';
 
 
 @Component({
@@ -13,34 +14,38 @@ import { AuthService } from 'src/app/services/auth.service';
 export class ChatComponent implements OnInit {
 
   @Input() chat: Chat;
+  you: UserDto;
   text = '';
 
-  messages: MessageDto[];
 
-  constructor(private socketService: SocketService, private authService: AuthService) {
+  constructor(private messagingService: MessagingService, private authService: AuthService) {
+    this.you = this.authService.getUser();
   }
 
   ngOnInit() {
 
-    const listener = this.socketService.listen('message');
+    this.messagingService.getMessages().subscribe((history: MessageDto[]) => {
+      this.chat.messages = history.filter(message => message.username === this.chat.recipient.username);
+    });
 
-    if (listener !== null) {
-      listener.subscribe((result: MessageDto) => {
-        this.messages.push(result);
-      });
-    }
+    this.messagingService.recieveMessages().subscribe((result: MessageDto) => {
+      if (result.username !== this.you.username && result.username === this.chat.recipient.username) {
+        console.log(result)
+        this.chat.messages.push(result);
+      }
+    });
   }
 
   sendMessage() {
-
-    const data: MessageDto = {
-      username: this.authService.getUsername(),
+    const message: MessageDto = {
+      username: this.you.username,
       recipient: this.chat.recipient.username,
       text: this.text,
       timestamp: new Date(),
       read: false
     };
 
-    this.socketService.emit('message', data);
+    this.chat.messages.push(message);
+    this.messagingService.sendMessage(message);
   }
 }

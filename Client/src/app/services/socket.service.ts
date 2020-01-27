@@ -32,7 +32,9 @@ export class SocketService {
   listen(eventName: string): Observable<any> | null {
     if (!this.connected) {
       this.connect();
-      return null;
+      if (!this.connect) {
+        return null;
+      }
     }
 
     return new Observable((subscriber) => {
@@ -45,7 +47,9 @@ export class SocketService {
   emit(eventName: string, data: any): boolean {
     if (!this.connected) {
       this.connect();
-      return false;
+      if (!this.connect) {
+        return false;
+      }
     }
 
     this.socket.emit(eventName, data);

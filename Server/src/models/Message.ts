@@ -2,8 +2,8 @@ import mongoose, { Schema, Document } from "mongoose"
 import { IUser } from './User'
 
 export interface IMessage extends Document {
-    user: IUser['_id'],
-    recipient: IUser['_id'],
+    username: IUser['username'],
+    recipient: IUser['username'],
     text: string,
     timestamp: Date,
     read: boolean
@@ -18,7 +18,7 @@ export interface MessageDto{
 }
 
 const MessageSchema: Schema = new Schema({
-    user: {
+    username: {
         type: String,
         required: true
     },

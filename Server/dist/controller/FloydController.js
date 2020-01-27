@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var User_1 = __importDefault(require("../models/User"));
+var Message_1 = __importDefault(require("../models/Message"));
 var FloydController = /** @class */ (function () {
     function FloydController(path) {
         this.router = express_1.Router();
@@ -70,7 +71,31 @@ var FloydController = /** @class */ (function () {
                 });
             });
         });
-        this.router.post;
+        this.router.get(this.path + "/messages", function (req, res) {
+            User_1.default.findById(req.user.id).exec(function (err, dbUser) {
+                if (err) {
+                    throw err;
+                }
+                if (!dbUser) {
+                    throw new Error('REST: User not found');
+                }
+                Message_1.default.find({ "$or": [{ recipient: dbUser.username }, { username: dbUser.username }] }, function (err, dbMessages) {
+                    if (err) {
+                        throw err;
+                    }
+                    var messages = dbMessages.map(function (message) {
+                        return {
+                            username: message.username,
+                            recipient: dbUser.username,
+                            text: message.text,
+                            timestamp: message.timestamp,
+                            read: message.read
+                        };
+                    });
+                    return res.send(messages);
+                });
+            });
+        });
     };
     return FloydController;
 }());

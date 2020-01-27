@@ -4,13 +4,34 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Config } from './Config';
 import { UserDto } from '../../../../Server/src/models/User';
+import { SocketService } from './socket.service';
+import { MessageDto } from '../../../../Server/src/models/Message';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagingService {
 
-  constructor(private authService: AuthService, private httpService: HttpClient) { }
+  constructor(private socketService: SocketService, private authService: AuthService, private httpService: HttpClient) { }
+
+  public sendMessage(message: MessageDto) {
+    this.socketService.emit('message', message);
+  }
+
+  public recieveMessages(): Observable<MessageDto> {
+
+    const listener = this.socketService.listen('message');
+
+    return new Observable<MessageDto>(observer => {
+      if (listener) {
+        listener.subscribe((result: MessageDto) => {
+          observer.next(result);
+        });
+      } else {
+        console.error('socketio not connected');
+      }
+    });
+  }
 
   public getContacts(): Observable<UserDto[]> {
     return new Observable<UserDto[]>(observer => {
@@ -37,6 +58,17 @@ export class MessagingService {
       )
       .subscribe((newContact: UserDto) => {
         observer.next(newContact);
+      });
+    });
+  }
+
+  public getMessages(): Observable<MessageDto[]> {
+    return new Observable<MessageDto[]>(observer => {
+      this.httpService.get(Config.uri + '/messaging/messages', {
+      headers: {
+        token: this.authService.getToken()
+      }}).subscribe((messages: MessageDto[]) => {
+        observer.next(messages);
       });
     });
   }

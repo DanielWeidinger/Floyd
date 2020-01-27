@@ -11,7 +11,7 @@ import { UserDto } from '../../../../Server/src/models/User';
 export class AuthService {
 
   private token: string;
-  private username: string;
+  private user: UserDto;
 
   constructor(private httpService: HttpClient, private router: Router) {}
 
@@ -30,7 +30,7 @@ export class AuthService {
         switch (result.status) {
           case 200:
             this.token = result.body.token;
-            this.username = givenUsername;
+            this.user = { username: givenUsername };
             return observer.next(true);
           default:
             return observer.next(false);
@@ -48,7 +48,7 @@ export class AuthService {
     return this.token;
   }
 
-  public getUsername(): string {
-    return this.username;
+  public getUser(): UserDto {
+    return this.user;
   }
 }

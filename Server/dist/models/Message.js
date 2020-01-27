@@ -9,7 +9,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importStar(require("mongoose"));
 var MessageSchema = new mongoose_1.Schema({
-    user: {
+    username: {
         type: String,
         required: true
     },

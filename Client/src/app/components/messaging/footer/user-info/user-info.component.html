@@ -1,0 +1,8 @@
+<mat-card fxFlexOffset>
+  <button mat-icon-button color="primary">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <h1 *ngIf="user !== undefined">
+    {{user.username}}
+  </h1>
+</mat-card>

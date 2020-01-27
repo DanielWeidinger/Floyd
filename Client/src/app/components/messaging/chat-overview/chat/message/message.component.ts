@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IMessage } from '../../../../../../../../Server/src/models/Message';
+import { MessageDto } from '../../../../../../../../Server/src/models/Message';
+import { UserDto } from '../../../../../../../../Server/src/models/User';
 
 @Component({
   selector: 'app-message',
@@ -8,7 +9,8 @@ import { IMessage } from '../../../../../../../../Server/src/models/Message';
 })
 export class MessageComponent implements OnInit {
 
-  @Input() message: IMessage;
+  @Input() you: UserDto;
+  @Input() message: MessageDto;
 
   constructor() { }
 

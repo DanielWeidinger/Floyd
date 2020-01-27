@@ -19,14 +19,13 @@ var MessagingSockets = /** @class */ (function () {
                 if (!dbUser) {
                     throw new Error("Socket: User not found");
                 }
-                var user = dbUser;
-                _this.connectedUserMap.set(user.username, socket.id);
-                Message_1.default.find({ read: true, recipient: user._id }).exec(function (err, messages) {
+                _this.connectedUserMap.set(dbUser.username, socket.id);
+                Message_1.default.find({ read: false, recipient: dbUser.username }).exec(function (err, messages) {
                     if (err) {
                         return socket.emit("error", err.message); //TODO error event client
                     }
                     messages.forEach(function (message) {
-                        socket.emit("message", message);
+                        _this.sendMessage("inbox", io, socket.id, message.recipient, dbUser.username, message);
                     });
                 });
                 socket.on('message', function (message) {
@@ -37,21 +36,37 @@ var MessagingSockets = /** @class */ (function () {
                         if (!dbRecipient) {
                             return socket.emit("error", "Recipient not found!");
                         }
-                        message.recipient = dbRecipient._id;
-                        message.save(function (err, dbMessage) {
+                        var newDbMessage = new Message_1.default(message);
+                        newDbMessage.username = dbUser.username;
+                        newDbMessage.save(function (err, dbMessage) {
                             if (err) {
                                 throw err;
                             }
                             //Send if user is online
-                            var recipient = _this.connectedUserMap.get(message.recipient);
-                            if (!recipient) {
-                                throw new Error("Socket: Recipient not found");
+                            var socketId = _this.connectedUserMap.get(message.recipient);
+                            if (socketId) {
+                                _this.sendMessage("message", io, socketId, message.username, message.recipient, dbMessage);
                             }
-                            io.to(recipient).emit("message", message);
                         });
                     });
                 });
             });
+        });
+    };
+    MessagingSockets.prototype.sendMessage = function (event, io, socketId, username, recipientName, message) {
+        message.updateOne({ read: true }, function (err, updated) {
+            if (err) {
+                throw err;
+            }
+            var messageDto = {
+                username: username,
+                recipient: recipientName,
+                text: message.text,
+                timestamp: message.timestamp,
+                read: message.read,
+            };
+            console.log(messageDto);
+            io.to(socketId).emit(event, messageDto);
         });
     };
     return MessagingSockets;

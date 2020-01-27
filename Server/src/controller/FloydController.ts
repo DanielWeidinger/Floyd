@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express'
 import IControllable from '../contracts/IControllable'
 import User from '../models/User';
 import { UserDto } from '../models/User';
+import Message, { MessageDto } from '../models/Message';
 
 export class FloydController implements IControllable{
     public router: Router = Router();
@@ -88,6 +89,34 @@ export class FloydController implements IControllable{
             });
         })
 
-        this.router.post
+        this.router.get(this.path + "/messages", (req: any, res) => {
+            User.findById(req.user.id).exec((err, dbUser) => {
+                if(err){
+                    throw err;
+                }
+
+                if(!dbUser){
+                    throw new Error('REST: User not found');
+                }
+
+                Message.find({"$or": [{recipient: dbUser.username}, { username: dbUser.username}] }, (err, dbMessages) => {
+                    if(err){
+                        throw err;
+                    }
+
+
+                    const messages: MessageDto[] = dbMessages.map(message => {
+                        return {
+                            username: message.username,
+                            recipient: dbUser.username,
+                            text: message.text,
+                            timestamp: message.timestamp,
+                            read: message.read
+                        };
+                    });
+                    return res.send(messages);
+                });
+            });
+        })
     }
 }

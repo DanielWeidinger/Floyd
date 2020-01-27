@@ -1,6 +1,8 @@
-<mat-toolbar color="primary" fxFill>
+<mat-toolbar color="primary" fxLayout="row" fxFill fxLayoutGap="1em">
 
-  <div fxFlex fxLayout="row" class="toolbar" id="footer-list"
+  <app-user-info fxFlex="10%"></app-user-info>
+
+  <div fxLayout="row" fxFlex class="toolbar accent" id="footer-list"
   cdkDropListConnectedTo="chat-overview-list"
   cdkDropList
   cdkDropListOrientation="horizontal"
@@ -15,5 +17,9 @@
     </div>
 
   </div>
-  <button mat-raised-button (click)="addContact()">ADD CONTACT</button>
-</mat-toolbar >
+  <button fxFlexAlign="center" fxFlex="10%" class="add_contact" mat-raised-button (click)="addContact()">
+    <mat-icon>
+      person_add
+    </mat-icon>
+  </button>
+</mat-toolbar>

@@ -1,19 +1,17 @@
-<mat-card class="chat" fxLayout="column">
-  <mat-card-title>
-    <span fxLayoutAlign="center center">
+<div fxLayout="column" fxFlexFill>
+  <mat-card class="header primary" fxLayoutGap="5%">
+    <h1 fxLayoutAlign="center center">
       {{chat.recipient.username}}
-    </span>
+    </h1>
     <mat-divider></mat-divider>
-  </mat-card-title>
-  <mat-card-content fxFlex>
-    <mat-list>
-      <mat-list-item *ngFor="let message of messages">
-        <app-message [message]="message">
-        </app-message>
-      </mat-list-item>
-    </mat-list>
-  </mat-card-content>
-  <mat-card-footer fxLayout="row" fxFlexOffset fxLayoutGap="5%" class="textInput">
+  </mat-card>
+  <mat-card class="chat">
+    <div *ngFor="let message of chat.messages">
+      <app-message [you]="you" [message]="message">
+      </app-message>
+    </div>
+  </mat-card>
+  <mat-card fxFlexOffset fxLayoutGap="5%" class="textInput">
     <mat-form-field fxFlex>
       <mat-label>Message</mat-label>
       <textarea matInput
@@ -28,5 +26,5 @@
       <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
     </mat-form-field>
     <button mat-raised-button color="primary" (click)="sendMessage()" fxFlex="10%">Send</button>
-  </mat-card-footer>
-</mat-card>
+  </mat-card>
+</div>

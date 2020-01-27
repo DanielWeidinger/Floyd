@@ -7,6 +7,7 @@ import { MatGridListModule, MatSidenavModule, MatListModule } from '@angular/mat
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatBadgeModule } from '@angular/material/badge';
 
 import { AppComponent } from './app.component';
 import { CustomMaterialModule } from './material/material.module';
@@ -23,6 +24,7 @@ import { ChatPartnerComponent } from './components/messaging/footer/chat-partner
 import { MessageComponent } from './components/messaging/chat-overview/chat/message/message.component';
 import { MessagingService } from './services/messaging.service';
 import { AddContactDialogComponent } from './components/messaging/dialogs/add-contact-dialog/add-contact-dialog.component';
+import { UserInfoComponent } from './components/messaging/footer/user-info/user-info.component';
 
 
 @NgModule({
@@ -36,7 +38,8 @@ import { AddContactDialogComponent } from './components/messaging/dialogs/add-co
     FooterComponent,
     ChatPartnerComponent,
     MessageComponent,
-    AddContactDialogComponent
+    AddContactDialogComponent,
+    UserInfoComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +54,8 @@ import { AddContactDialogComponent } from './components/messaging/dialogs/add-co
     HttpClientModule,
     FlexLayoutModule,
     MatListModule,
-    DragDropModule
+    DragDropModule,
+    MatBadgeModule
   ],
   providers: [
     AuthService,

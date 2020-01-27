@@ -52,6 +52,6 @@ export class FooterComponent implements OnInit {
   }
 
   createChat(user: UserDto): Chat {
-    return {recipient: user, messages: null}
+    return {recipient: user, messages: []};
   }
 }
