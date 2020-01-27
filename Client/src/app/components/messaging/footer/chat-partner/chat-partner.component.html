@@ -1,10 +1,13 @@
-<mat-card [matBadge]='getBadgeCount()' matBadgePosition="above after" class="user">
+<mat-card fxLayoutAlign="center center" fxLayoutGap="1em" fxLayout="row"
+          [matBadge]='getBadgeCount()' matBadgePosition="above after"
+          class="user" [class.primary]="you.username === chat.recipient.username">
 
   <mat-icon>
     account_circle
   </mat-icon>
 
-  <span >
+  <span *ngIf="you.username === chat.recipient.username">You</span>
+  <span *ngIf="you.username !== chat.recipient.username">
     {{this.chat.recipient.username}}
   </span>
 </mat-card>

@@ -15,6 +15,7 @@ export class ChatComponent implements OnInit {
 
   @Input() isPreview = false;
   @Input() chat: Chat;
+  unread: number;
   you: UserDto;
   text = '';
 
@@ -26,18 +27,16 @@ export class ChatComponent implements OnInit {
   ngOnInit() {
 
     if (!this.isPreview) {
+      const currUnread = this.chat.messages.filter(message => !message.read).length;
+
       this.messagingService.getMessages().subscribe((history: MessageDto[]) => {
-        console.log(history)
         this.chat.messages = history
-        .filter(message => (message.username === this.you.username || message.recipient === this.you.username) &&
-                           (message.recipient === this.chat.recipient.username || message.username === this.chat.recipient.username));
+        .filter(message => message.username === this.chat.recipient.username && message.recipient === this.you.username
+                        || message.username === this.you.username && message.recipient === this.chat.recipient.username);
+
+        this.unread = this.chat.messages.length - currUnread;
       });
 
-      this.messagingService.receiveMessages().subscribe((result: MessageDto) => {
-        if (result.username === this.chat.recipient.username && result.recipient === this.you.username) {
-          this.chat.messages.push(result);
-        }
-      });
     }
   }
 

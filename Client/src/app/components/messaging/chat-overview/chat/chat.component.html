@@ -1,12 +1,19 @@
 <div fxLayout="column" fxFlexFill>
-  <mat-card class="header primary" fxLayoutGap="5%">
-    <h1 fxLayoutAlign="center center">
+  <mat-card class="header" fxLayoutGap="5%" [class.primary]="you.username === chat.recipient.username">
+    <h1 *ngIf="you.username !== chat.recipient.username" fxLayoutAlign="left center">
       {{chat.recipient.username}}
     </h1>
-    <mat-divider></mat-divider>
+    <h1 *ngIf="you.username === chat.recipient.username">
+      You
+    </h1>
   </mat-card>
   <mat-card class="chat">
-    <div *ngFor="let message of chat.messages">
+    <div *ngFor="let message of chat.messages; let i = index">
+      <div fxLayout="row" *ngIf="i === unread">
+        <mat-divider></mat-divider>
+        <span>Unread</span>
+        <mat-divider></mat-divider>
+      </div>
       <app-message [you]="you" [message]="message">
       </app-message>
     </div>

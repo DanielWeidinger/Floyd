@@ -1,5 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Chat } from '../../chat-overview/chat/Chat';
+import { MessagingService } from 'src/app/services/messaging.service';
+import { MessageDto } from '../../../../../../../Server/src/models/Message';
+import { UserDto } from '../../../../../../../Server/src/models/User';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 @Component({
@@ -10,14 +14,29 @@ import { Chat } from '../../chat-overview/chat/Chat';
 export class ChatPartnerComponent implements OnInit {
 
   @Input() chat: Chat;
+  you: UserDto;
 
-  constructor() { }
+  constructor(private messagingService: MessagingService, private authService: AuthService) {
+    this.you = authService.getUser();
+  }
 
   ngOnInit() {
+    this.messagingService.receiveMessages().subscribe((result: MessageDto) => {
+
+      if (result.username === result.recipient) {
+        console.log("Self")
+        return;
+      }
+
+      console.log(result)
+      if (result.username === this.chat.recipient.username || result.recipient === this.you.username) {
+        this.chat.messages.push(result);
+      }
+    });
   }
 
   getBadgeCount(): number {
-    return 42;
+    return this.chat.messages.filter(message => !message.read).length;
   }
 
 }
