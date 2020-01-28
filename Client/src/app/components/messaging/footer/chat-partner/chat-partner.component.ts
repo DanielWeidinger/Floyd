@@ -23,12 +23,13 @@ export class ChatPartnerComponent implements OnInit {
   ngOnInit() {
     this.messagingService.receiveMessages().subscribe((result: MessageDto) => {
 
+      console.log("Received: ")
+      console.log(result)
+
       if (result.username === result.recipient) {
-        console.log("Self")
         return;
       }
 
-      console.log(result)
       if (result.username === this.chat.recipient.username || result.recipient === this.you.username) {
         this.chat.messages.push(result);
       }
@@ -36,7 +37,7 @@ export class ChatPartnerComponent implements OnInit {
   }
 
   getBadgeCount(): number {
-    return this.chat.messages.filter(message => !message.read).length;
+    return this.chat.messages.filter(message => !message.read && message.recipient === this.chat.recipient.username).length;
   }
 
 }

@@ -6,7 +6,8 @@ export interface IMessage extends Document {
     recipient: IUser['username'],
     text: string,
     timestamp: Date,
-    read: boolean
+    read: boolean,
+    multipleRecipients: boolean
 }
 
 export interface MessageDto{
@@ -14,7 +15,8 @@ export interface MessageDto{
     recipient: IUser['username'],
     text: IMessage['text'],
     timestamp: IMessage['timestamp'],
-    read: IMessage['read']
+    read: IMessage['read'],
+    multipleRecipients: IMessage['multipleRecipients']
 }
 
 const MessageSchema: Schema = new Schema({
@@ -35,6 +37,10 @@ const MessageSchema: Schema = new Schema({
         required: true
     },
     read: {
+        type: Boolean,
+        default: false
+    },
+    multipleRecipients: {
         type: Boolean,
         default: false
     }

@@ -19,13 +19,17 @@ var MessagingSockets = /** @class */ (function () {
                 if (!dbUser) {
                     throw new Error("Socket: User not found");
                 }
+                dbUser.groups.forEach(function (group) {
+                    socket.join(group._id);
+                });
                 _this.connectedUserMap.set(dbUser.username, socket.id);
                 Message_1.default.find({ read: false, recipient: dbUser.username }).exec(function (err, messages) {
                     if (err) {
                         return socket.emit("error", err.message); //TODO error event client
                     }
+                    console.log(messages.length);
                     messages.forEach(function (message) {
-                        _this.sendMessage("message", io, socket.id, message.recipient, dbUser.username, message);
+                        _this.sendMessage("message", io, socket.id, message.username, dbUser.username, message);
                     });
                 });
                 socket.on('message', function (message) {
@@ -38,17 +42,23 @@ var MessagingSockets = /** @class */ (function () {
                         }
                         var newDbMessage = new Message_1.default(message);
                         newDbMessage.username = dbUser.username;
+                        console.log(newDbMessage);
                         newDbMessage.save(function (err, dbMessage) {
                             if (err) {
                                 throw err;
                             }
                             //Send if user is online
-                            var socketId = _this.connectedUserMap.get(message.recipient);
+                            var socketId = message.multipleRecipients ? message.recipient : _this.connectedUserMap.get(message.recipient);
                             if (socketId) {
+                                console.log(socketId);
+                                console.log(_this.connectedUserMap);
                                 _this.sendMessage("message", io, socketId, message.username, message.recipient, dbMessage);
                             }
                         });
                     });
+                });
+                socket.on('disconnect', function () {
+                    _this.connectedUserMap.delete(dbUser.username);
                 });
             });
         });
@@ -64,6 +74,7 @@ var MessagingSockets = /** @class */ (function () {
                 text: message.text,
                 timestamp: message.timestamp,
                 read: false,
+                multipleRecipients: message.multipleRecipients
             };
             io.to(socketId).emit(event, messageDto);
         });

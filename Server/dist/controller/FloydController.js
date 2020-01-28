@@ -87,10 +87,11 @@ var FloydController = /** @class */ (function () {
                     var messages = dbMessages.map(function (message) {
                         return {
                             username: message.username,
-                            recipient: dbUser.username,
+                            recipient: message.recipient,
                             text: message.text,
                             timestamp: message.timestamp,
-                            read: message.read
+                            read: message.read,
+                            multipleRecipients: message.multipleRecipients
                         };
                     });
                     return res.send(messages);

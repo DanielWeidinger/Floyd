@@ -108,10 +108,11 @@ export class FloydController implements IControllable{
                     const messages: MessageDto[] = dbMessages.map(message => {
                         return {
                             username: message.username,
-                            recipient: dbUser.username,
+                            recipient: message.recipient,
                             text: message.text,
                             timestamp: message.timestamp,
-                            read: message.read
+                            read: message.read,
+                            multipleRecipients: message.multipleRecipients
                         };
                     });
                     return res.send(messages);

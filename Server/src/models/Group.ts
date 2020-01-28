@@ -2,8 +2,13 @@ import mongoose, { Schema, Document } from "mongoose"
 import { IUser } from "./User";
 
 export interface IGroup extends Document {
-    name: string;
-    users: IUser['_id'];
+    name: IUser['username'];
+    users: IUser['username'][];
+}
+
+export interface GroupDto{
+    name: IGroup['name'],
+    users: IGroup['users']
 }
 
 const GroupSchema: Schema = new Schema({
@@ -15,6 +20,6 @@ const GroupSchema: Schema = new Schema({
         type: String,
         required: true
     }
-})
+});
 
 export default mongoose.model<IGroup>('Group', GroupSchema);

@@ -2,6 +2,7 @@ import { ISocketabel } from "../contracts/ISocketable";
 import { Server, Socket } from "socket.io";
 import Message, { IMessage, MessageDto } from '../models/Message';
 import User, { IUser } from "../models/User";
+import Group from "../models/Group";
 
 export class MessagingSockets implements ISocketabel{
 
@@ -18,6 +19,11 @@ export class MessagingSockets implements ISocketabel{
                     throw new Error("Socket: User not found")
                 }
 
+
+                dbUser.groups.forEach(group => {
+                    socket.join(group._id);
+                });
+
                 this.connectedUserMap.set(dbUser.username, socket.id);
 
                 Message.find({ read: false, recipient: dbUser.username }).exec((err, messages) => {
@@ -26,8 +32,10 @@ export class MessagingSockets implements ISocketabel{
                         return socket.emit("error", err.message) //TODO error event client
                     }
 
+                    console.log(messages.length)
+
                     messages.forEach(message => {
-                        this.sendMessage("message", io, socket.id, message.recipient, dbUser.username, message);
+                        this.sendMessage("message", io, socket.id, message.username, dbUser.username, message);
                     })
                 });
 
@@ -44,19 +52,26 @@ export class MessagingSockets implements ISocketabel{
                         const newDbMessage = new Message(message);
                         newDbMessage.username = dbUser.username;
 
+                        console.log(newDbMessage)
                         newDbMessage.save((err, dbMessage) => {
                             if(err){
                                 throw err;
                             }
-                            
+
                             //Send if user is online
-                            const socketId = this.connectedUserMap.get(message.recipient)
+                            const socketId = message.multipleRecipients ? message.recipient : this.connectedUserMap.get(message.recipient)
                             if(socketId){
+                                console.log(socketId)
+                                console.log(this.connectedUserMap)
                                 this.sendMessage("message", io, socketId, message.username, message.recipient, dbMessage);
                             }
                         });
                     });
                 });
+                
+                socket.on('disconnect', () => {
+                    this.connectedUserMap.delete(dbUser.username);
+                })
             }); 
         });
     }
@@ -73,7 +88,9 @@ export class MessagingSockets implements ISocketabel{
                 text: message.text,
                 timestamp: message.timestamp,
                 read: false,
+                multipleRecipients: message.multipleRecipients
             }
+            
             io.to(socketId).emit(event, messageDto)
         })
     }

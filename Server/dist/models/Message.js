@@ -28,6 +28,10 @@ var MessageSchema = new mongoose_1.Schema({
     read: {
         type: Boolean,
         default: false
+    },
+    multipleRecipients: {
+        type: Boolean,
+        default: false
     }
 });
 exports.default = mongoose_1.default.model('Message', MessageSchema);

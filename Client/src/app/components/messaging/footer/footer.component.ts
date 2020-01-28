@@ -22,7 +22,7 @@ export class FooterComponent implements OnInit {
 
   ngOnInit() {
     this.messagingService.getContacts().subscribe((result: UserDto[]) => {
-      this.chats = result.map(user => this.createChat(user));
+      this.chats = result.map(user => this.createChat(user, false));
     });
   }
 
@@ -35,7 +35,7 @@ export class FooterComponent implements OnInit {
       }
 
       this.messagingService.addContacts(contact.username).subscribe((result: UserDto) => {
-        this.chats.push(this.createChat(result));
+        this.chats.push(this.createChat(result, false));
       });
     });
   }
@@ -51,7 +51,7 @@ export class FooterComponent implements OnInit {
     }
   }
 
-  createChat(user: UserDto): Chat {
-    return {recipient: user, messages: []};
+  createChat(user: UserDto, group: boolean): Chat {
+    return {recipient: user, messages: [], isGroup: group};
   }
 }
