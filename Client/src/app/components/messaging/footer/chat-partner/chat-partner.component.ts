@@ -27,6 +27,7 @@ export class ChatPartnerComponent implements OnInit {
         return;
       }
 
+      console.log(message)
       if (message.username === this.chat.recipient.username && message.recipient === this.you.username
           || message.username === this.you.username && message.recipient === this.chat.recipient.username) {
         this.chat.messages.push(message);

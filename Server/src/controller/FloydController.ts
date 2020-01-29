@@ -78,6 +78,7 @@ export class FloydController implements IControllable{
                         }
 
                         dbUser.contacts.push(dbContact._id);
+                        dbContact.contacts.push(dbUser._id);
                         dbUser.save((err) => {
                         if(err){
                             throw err;
@@ -120,8 +121,6 @@ export class FloydController implements IControllable{
                 });
             });
         });
-<<<<<<< HEAD
-=======
 
         this.router.get(this.path + "/groups", (req: any, res) => {
             User.findById(req.user.id).exec((err, dbUser) => {
@@ -199,6 +198,5 @@ export class FloydController implements IControllable{
                 });
             });
         });
->>>>>>> ada4a113bea8de4b1ad43160921ed8725048c385
     }
 }

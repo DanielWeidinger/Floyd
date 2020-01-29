@@ -62,6 +62,7 @@ var FloydController = /** @class */ (function () {
                             return res.status(400).json({ message: "already added to contacts!" });
                         }
                         dbUser.contacts.push(dbContact._id);
+                        dbContact.contacts.push(dbUser._id);
                         dbUser.save(function (err) {
                             if (err) {
                                 throw err;

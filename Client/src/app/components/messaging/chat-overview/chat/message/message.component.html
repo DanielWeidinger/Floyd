@@ -1,3 +1,6 @@
-<li [class.me]="message.username === you.username" [class.him]="message.username !== you.username" class="entry">
+<div fxLayout="row" fxLayoutAlign="{{message.username === you.username ? 'start' : 'end'}}" >
+  <mat-card
+  [class.me]="message.username === you.username" [class.him]="message.username !== you.username" class="entry">
   {{message.text}}
-</li>
+</mat-card>
+</div>

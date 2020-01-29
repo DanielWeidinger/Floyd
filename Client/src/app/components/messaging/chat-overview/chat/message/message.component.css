@@ -1,20 +1,15 @@
 .entry{
-
-  display:inline-block;
-  clear: both;
-  padding: 20px;
-  border-radius: 30px;
+  padding: 1em;
+  border-radius: 2em;
   margin-bottom: 2px;
   font-family: Helvetica, Arial, sans-serif;
 }
 
 .me{
   background: #595959;
-  float: left;
 }
 
 .him{
-  float: right;
   background: #fa5788;
   color: fa5788;
 }

@@ -15,9 +15,9 @@
 
     </div>
   </mat-card>
-  <mat-card class="chat">
+  <mat-card fxLayout="column" class="chat" #scroll>
     <div *ngFor="let message of chat.messages; let i = index">
-      <div fxLayout="row" *ngIf="i === unread">
+      <div *ngIf="i === unread">
         <mat-divider></mat-divider>
         <span>Unread</span>
         <mat-divider></mat-divider>
