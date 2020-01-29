@@ -21,16 +21,15 @@ export class ChatPartnerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.messagingService.receiveMessages().subscribe((result: MessageDto) => {
+    this.messagingService.receiveMessages().subscribe((message: MessageDto) => {
 
-      if (result.username === result.recipient) {
-        console.log("Self")
+      if (message.username === message.recipient) {
         return;
       }
 
-      console.log(result)
-      if (result.username === this.chat.recipient.username || result.recipient === this.you.username) {
-        this.chat.messages.push(result);
+      if (message.username === this.chat.recipient.username && message.recipient === this.you.username
+          || message.username === this.you.username && message.recipient === this.chat.recipient.username) {
+        this.chat.messages.push(message);
       }
     });
   }

@@ -25,11 +25,11 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit() {
-
     if (!this.isPreview) {
       const currUnread = this.chat.messages.filter(message => !message.read).length;
 
       this.messagingService.getMessages().subscribe((history: MessageDto[]) => {
+        console.log(history)
         this.chat.messages = history
         .filter(message => message.username === this.chat.recipient.username && message.recipient === this.you.username
                         || message.username === this.you.username && message.recipient === this.chat.recipient.username);
@@ -46,7 +46,8 @@ export class ChatComponent implements OnInit {
       recipient: this.chat.recipient.username,
       text: this.text,
       timestamp: new Date(),
-      read: false
+      read: false,
+      multipleRecipients: false
     };
 
     this.chat.messages.push(message);

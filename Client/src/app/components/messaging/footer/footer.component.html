@@ -2,8 +2,7 @@
 
   <app-user-info fxFlex="10%"></app-user-info>
 
-  <div fxLayout="row" fxFlex class="toolbar accent" id="footer-list"
-  cdkDropListConnectedTo="chat-overview-list"
+  <div fxLayout="row" fxFlex class="toolbar accent"
   cdkDropList
   cdkDropListOrientation="horizontal"
   [cdkDropListData]="chats"
@@ -12,6 +11,9 @@
     <div class="chat-partner" *ngFor="let chat of chats" cdkDrag>
       <app-chat-partner [chat]="chat"></app-chat-partner>
       <div *cdkDragPreview>
+        <app-chat [isPreview]="true" [chat]="{recipient: chat.recipient}"></app-chat>
+      </div>
+      <div *cdkDragPlaceholder fxFlex>
         <app-chat [isPreview]="true" [chat]="{recipient: chat.recipient}"></app-chat>
       </div>
     </div>

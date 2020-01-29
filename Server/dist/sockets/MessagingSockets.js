@@ -19,13 +19,16 @@ var MessagingSockets = /** @class */ (function () {
                 if (!dbUser) {
                     throw new Error("Socket: User not found");
                 }
+                dbUser.groups.forEach(function (group) {
+                    socket.join(group._id);
+                });
                 _this.connectedUserMap.set(dbUser.username, socket.id);
                 Message_1.default.find({ read: false, recipient: dbUser.username }).exec(function (err, messages) {
                     if (err) {
                         return socket.emit("error", err.message); //TODO error event client
                     }
                     messages.forEach(function (message) {
-                        _this.sendMessage("message", io, socket.id, message.recipient, dbUser.username, message);
+                        _this.sendMessage("message", io, socket.id, message.username, dbUser.username, message);
                     });
                 });
                 socket.on('message', function (message) {
@@ -43,12 +46,15 @@ var MessagingSockets = /** @class */ (function () {
                                 throw err;
                             }
                             //Send if user is online
-                            var socketId = _this.connectedUserMap.get(message.recipient);
+                            var socketId = message.multipleRecipients ? message.recipient : _this.connectedUserMap.get(message.recipient);
                             if (socketId) {
                                 _this.sendMessage("message", io, socketId, message.username, message.recipient, dbMessage);
                             }
                         });
                     });
+                });
+                socket.on('disconnect', function () {
+                    _this.connectedUserMap.delete(dbUser.username);
                 });
             });
         });
@@ -65,6 +71,7 @@ var MessagingSockets = /** @class */ (function () {
                 text: message.text,
                 timestamp: message.timestamp,
                 read: false,
+                multipleRecipients: message.multipleRecipients
             };
             console.log(messageDto.text);
             console.log(_this.connectedUserMap);
