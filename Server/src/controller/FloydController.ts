@@ -3,6 +3,7 @@ import IControllable from '../contracts/IControllable'
 import User from '../models/User';
 import { UserDto } from '../models/User';
 import Message, { MessageDto } from '../models/Message';
+import Group, { GroupDto, IGroup } from '../models/Group';
 
 export class FloydController implements IControllable{
     public router: Router = Router();
@@ -18,7 +19,7 @@ export class FloydController implements IControllable{
 
         this.router.get(this.path, (req, res) => {
             res.send("Running")
-        })
+        });
 
         this.router.get(this.path + "/contacts", (req: any, res) => {
             User.findById(req.user.id).exec((err, dbUser) => {
@@ -32,12 +33,12 @@ export class FloydController implements IControllable{
                 
                 User.find({'_id': {
                     $in: dbUser.contacts
-                }}).exec((err, dbContracts) => {
+                }}).exec((err, dbContacts) => {
                     if(err){
                         throw err;
                     }
 
-                    const payload: UserDto[] = dbContracts.map(contact => {
+                    const payload: UserDto[] = dbContacts.map(contact => {
                         return {username: contact.username}
                     }); 
 
@@ -87,7 +88,7 @@ export class FloydController implements IControllable{
                     })
                 });
             });
-        })
+        });
 
         this.router.get(this.path + "/messages", (req: any, res) => {
             User.findById(req.user.id).exec((err, dbUser) => {
@@ -118,6 +119,83 @@ export class FloydController implements IControllable{
                     return res.send(messages);
                 });
             });
-        })
+        });
+
+        this.router.get(this.path + "/groups", (req: any, res) => {
+            User.findById(req.user.id).exec((err, dbUser) => {
+                if(err){
+                    throw err;
+                }
+
+                if(!dbUser){
+                    throw new Error('REST: User not found');
+                }
+                
+                Group.find({'_id': {
+                    $in: dbUser.groups
+                }}).exec((err, dbGroups) => {
+                    if(err){
+                        throw err;
+                    }
+
+                    const payload: GroupDto[] = dbGroups.map(group => {
+                        return {id: group.id,
+                                name: group.name,
+                                users: group.users}
+                    }); 
+
+                    res.send(payload);
+                });
+            });
+        });
+
+        this.router.post(this.path + "/group", (req: any, res) => {
+            User.findById(req.user.id).exec((err, dbUser) => {
+                if(err){
+                    throw err;
+                }
+
+                if(!dbUser){
+                    throw new Error('REST: User not found');
+                }
+
+                const groupName: string = req.body.name;
+                const groupMembers: string[] = req.body.groupMembers;
+
+                if (!groupName || !groupMembers || groupMembers.length < 1) {
+                    return res.status(400).json({message: "bad group config"});
+                }
+
+                User.find({"username": {$in: groupName}}, (err, dbMembers) => {
+                    if(err) {
+                        throw err;
+                    }
+
+                    if(!dbMembers){
+                        return res.status(400).json({message: "no group member was found!"});
+                    }
+
+
+                    const newGroup: IGroup = new Group({
+                        name: groupName,
+                        users: dbMembers.map(member => member.username)
+                    });
+
+                    newGroup.save((err, dbNewGroup) => {
+                        if(err) {
+                            throw err;
+                        }
+
+                        const payload: GroupDto = {
+                            id: dbNewGroup._id,
+                            name: dbNewGroup.name,
+                            users: dbNewGroup.users
+                        }
+
+                        return res.send(payload)
+                    })
+                });
+            });
+        });
     }
 }

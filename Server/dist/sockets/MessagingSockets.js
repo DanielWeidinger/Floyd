@@ -27,7 +27,6 @@ var MessagingSockets = /** @class */ (function () {
                     if (err) {
                         return socket.emit("error", err.message); //TODO error event client
                     }
-                    console.log(messages.length);
                     messages.forEach(function (message) {
                         _this.sendMessage("message", io, socket.id, message.username, dbUser.username, message);
                     });
@@ -42,7 +41,6 @@ var MessagingSockets = /** @class */ (function () {
                         }
                         var newDbMessage = new Message_1.default(message);
                         newDbMessage.username = dbUser.username;
-                        console.log(newDbMessage);
                         newDbMessage.save(function (err, dbMessage) {
                             if (err) {
                                 throw err;
@@ -50,8 +48,6 @@ var MessagingSockets = /** @class */ (function () {
                             //Send if user is online
                             var socketId = message.multipleRecipients ? message.recipient : _this.connectedUserMap.get(message.recipient);
                             if (socketId) {
-                                console.log(socketId);
-                                console.log(_this.connectedUserMap);
                                 _this.sendMessage("message", io, socketId, message.username, message.recipient, dbMessage);
                             }
                         });

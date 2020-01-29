@@ -32,8 +32,6 @@ export class MessagingSockets implements ISocketabel{
                         return socket.emit("error", err.message) //TODO error event client
                     }
 
-                    console.log(messages.length)
-
                     messages.forEach(message => {
                         this.sendMessage("message", io, socket.id, message.username, dbUser.username, message);
                     })
@@ -52,7 +50,6 @@ export class MessagingSockets implements ISocketabel{
                         const newDbMessage = new Message(message);
                         newDbMessage.username = dbUser.username;
 
-                        console.log(newDbMessage)
                         newDbMessage.save((err, dbMessage) => {
                             if(err){
                                 throw err;
@@ -61,8 +58,6 @@ export class MessagingSockets implements ISocketabel{
                             //Send if user is online
                             const socketId = message.multipleRecipients ? message.recipient : this.connectedUserMap.get(message.recipient)
                             if(socketId){
-                                console.log(socketId)
-                                console.log(this.connectedUserMap)
                                 this.sendMessage("message", io, socketId, message.username, message.recipient, dbMessage);
                             }
                         });

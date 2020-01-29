@@ -1,14 +1,16 @@
-<div>
-    <mat-toolbar color="primary">
-      <mat-toolbar-row>
-        <span>Floyd</span>
-      </mat-toolbar-row>
-    </mat-toolbar>
+<div style="height: 100%;" fxLayout="column">
+  <mat-toolbar fxFlex="10%" color="primary">
+    <mat-toolbar-row>
+      <span>Floyd</span>
+    </mat-toolbar-row>
+  </mat-toolbar>
 
-    <mat-grid-list cols="1" rowHeight="2:1">
-      <mat-grid-tile>
-        <router-outlet></router-outlet>
-      </mat-grid-tile>
-    </mat-grid-list>
+  <div
+      fxFlex="90%"
+      fxLayoutAlign="center center">
+      <router-outlet></router-outlet>
+  </div>
 </div>
+
+
 

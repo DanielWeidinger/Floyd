@@ -7,6 +7,7 @@ export interface IGroup extends Document {
 }
 
 export interface GroupDto{
+    id: IGroup['_id'],
     name: IGroup['name'],
     users: IGroup['users']
 }
