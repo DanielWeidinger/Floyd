@@ -51,3 +51,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-
   background: #fa5788;
 }
 
+
+/*Drag and Drop*/
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging:not(.cdkPlaceholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdkPlaceholder {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

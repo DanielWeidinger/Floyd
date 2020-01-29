@@ -35,9 +35,7 @@ export class ChatPartnerComponent implements OnInit {
   }
 
   getBadgeCount(): number {
-    console.log(this.chat.messages);
-    const test = this.chat.messages.filter(message => !message.read);
-    return test.length;
+    return this.chat.messages.filter(message => !message.read).length;
   }
 
 }

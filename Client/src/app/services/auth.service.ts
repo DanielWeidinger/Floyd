@@ -22,14 +22,16 @@ export class AuthService {
     }*/
   }
 
-  public updateToken(givenUsername: string, givenPassword: string): Observable<boolean> {
+  public updateToken(givenUsername: string, givenPassword: string, signIn?: boolean): Observable<boolean> {
+
+    const route = signIn ? '/auth/register' : '/auth/login';
 
     return new Observable<boolean>(observer => {
       const body = {
         username: givenUsername,
         password: givenPassword
       };
-      this.httpService.post(Config.uri + '/auth/login', body,
+      this.httpService.post(Config.uri + route, body,
       {
         observe: 'response'
       })
