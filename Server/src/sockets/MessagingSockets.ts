@@ -74,6 +74,8 @@ export class MessagingSockets implements ISocketabel{
                 timestamp: message.timestamp,
                 read: false,
             }
+            console.log(messageDto.text)
+            console.log(this.connectedUserMap)
             io.to(socketId).emit(event, messageDto)
         })
     }

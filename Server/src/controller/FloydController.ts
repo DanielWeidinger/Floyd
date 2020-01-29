@@ -18,7 +18,7 @@ export class FloydController implements IControllable{
 
         this.router.get(this.path, (req, res) => {
             res.send("Running")
-        })
+        });
 
         this.router.get(this.path + "/contacts", (req: any, res) => {
             User.findById(req.user.id).exec((err, dbUser) => {
@@ -87,7 +87,7 @@ export class FloydController implements IControllable{
                     })
                 });
             });
-        })
+        });
 
         this.router.get(this.path + "/messages", (req: any, res) => {
             User.findById(req.user.id).exec((err, dbUser) => {
@@ -100,7 +100,7 @@ export class FloydController implements IControllable{
                 }
 
                 Message.find({"$and": [{"$or": [{recipient: dbUser.username}, { username: dbUser.username}] },
-                                        {read: true}]}, (err, dbMessages) => {
+                                                {read: true}]}, (err, dbMessages) => {
                     if(err){
                         throw err;
                     }
@@ -108,7 +108,7 @@ export class FloydController implements IControllable{
                     const messages: MessageDto[] = dbMessages.map(message => {
                         return {
                             username: message.username,
-                            recipient: dbUser.username,
+                            recipient: message.recipient,
                             text: message.text,
                             timestamp: message.timestamp,
                             read: message.read
@@ -117,6 +117,6 @@ export class FloydController implements IControllable{
                     return res.send(messages);
                 });
             });
-        })
+        });
     }
 }

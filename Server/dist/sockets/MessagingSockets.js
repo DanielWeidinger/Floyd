@@ -54,6 +54,7 @@ var MessagingSockets = /** @class */ (function () {
         });
     };
     MessagingSockets.prototype.sendMessage = function (event, io, socketId, username, recipientName, message) {
+        var _this = this;
         message.updateOne({ read: true }, function (err, updated) {
             if (err) {
                 throw err;
@@ -65,6 +66,8 @@ var MessagingSockets = /** @class */ (function () {
                 timestamp: message.timestamp,
                 read: false,
             };
+            console.log(messageDto.text);
+            console.log(_this.connectedUserMap);
             io.to(socketId).emit(event, messageDto);
         });
     };

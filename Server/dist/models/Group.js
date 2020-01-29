@@ -14,7 +14,7 @@ var GroupSchema = new mongoose_1.Schema({
         required: true
     },
     users: {
-        type: String,
+        type: [String],
         required: true
     }
 });

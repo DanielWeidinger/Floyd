@@ -3,7 +3,7 @@ import { IUser } from "./User";
 
 export interface IGroup extends Document {
     name: string;
-    users: IUser['_id'];
+    users: IUser['username'][];
 }
 
 const GroupSchema: Schema = new Schema({
@@ -12,7 +12,7 @@ const GroupSchema: Schema = new Schema({
         required: true
     },
     users: {
-        type: String,
+        type: [String],
         required: true
     }
 })
