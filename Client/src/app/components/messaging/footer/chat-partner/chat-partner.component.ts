@@ -21,23 +21,23 @@ export class ChatPartnerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.messagingService.receiveMessages().subscribe((result: MessageDto) => {
+    this.messagingService.receiveMessages().subscribe((message: MessageDto) => {
 
-      console.log("Received: ")
-      console.log(result)
-
-      if (result.username === result.recipient) {
+      if (message.username === message.recipient) {
         return;
       }
 
-      if (result.username === this.chat.recipient.username || result.recipient === this.you.username) {
-        this.chat.messages.push(result);
+      if (message.username === this.chat.recipient.username && message.recipient === this.you.username
+          || message.username === this.you.username && message.recipient === this.chat.recipient.username) {
+        this.chat.messages.push(message);
       }
     });
   }
 
   getBadgeCount(): number {
-    return this.chat.messages.filter(message => !message.read && message.recipient === this.chat.recipient.username).length;
+    console.log(this.chat.messages);
+    const test = this.chat.messages.filter(message => !message.read);
+    return test.length;
   }
 
 }
