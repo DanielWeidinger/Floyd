@@ -1,6 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import { Chat } from './chat/Chat';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {AddContactDialogComponent} from '../dialogs/add-contact-dialog/add-contact-dialog.component';
+import {MatDialog} from '@angular/material';
+import {MessagingService} from '../../../services/messaging.service';
+import { UserDto } from '../../../../../../Server/src/models/User';
+import {AddGroupDialogComponent} from '../dialogs/add-group-dialog/add-group-dialog.component';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-chat-overview',
@@ -11,7 +17,9 @@ export class ChatOverviewComponent implements OnInit {
 
   currentChats: Chat[];
 
-  constructor() {
+  public eventsSubject: Subject<Chat> = new Subject<Chat>();
+
+  constructor(private messagingService: MessagingService, private dialog: MatDialog) {
     this.currentChats = [];
   }
 
@@ -30,4 +38,35 @@ export class ChatOverviewComponent implements OnInit {
     }
   }
 
+  addContact() {
+    const addContactDialog = this.dialog.open(AddContactDialogComponent);
+
+    addContactDialog.afterClosed().subscribe((contact: UserDto | null) => {
+      if (!contact) {
+        throw new Error('AddContact: user not found');
+      }
+
+      this.messagingService.addContacts(contact.username).subscribe((result: UserDto) => {
+        this.eventsSubject.next(this.createChat(result, false));
+      });
+    });
+  }
+
+  addGroup() {
+    const addGroupDialog = this.dialog.open(AddGroupDialogComponent);
+
+    addGroupDialog.afterClosed().subscribe((contact: UserDto | null) => {
+      if (!contact) {
+        throw new Error('AddContact: user not found');
+      }
+
+      // this.messagingService.addContacts(contact.username).subscribe((result: UserDto) => {
+      //   this.chats.push(this.createChat(result, false));
+      // });
+    });
+  }
+
+  createChat(user: UserDto, group: boolean): Chat {
+    return {recipient: user, messages: [], isGroup: group};
+  }
 }
