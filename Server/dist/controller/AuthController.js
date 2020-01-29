@@ -74,7 +74,7 @@ var AuthController = /** @class */ (function () {
     };
     AuthController.prototype.handleSignUp = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var errors, _a, username, password, user, salt, passwordHash, payload, err_1;
+            var errors, _a, username, password, user, salt, passwordHash, newUser, payload, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -87,7 +87,7 @@ var AuthController = /** @class */ (function () {
                         _a = req.body, username = _a.username, password = _a.password;
                         _b.label = 1;
                     case 1:
-                        _b.trys.push([1, 6, , 7]);
+                        _b.trys.push([1, 7, , 8]);
                         return [4 /*yield*/, User_1.default.findOne({
                                 username: username
                             })];
@@ -107,10 +107,15 @@ var AuthController = /** @class */ (function () {
                         user = new User_1.default({
                             username: username,
                             passwordHash: passwordHash,
-                            salt: salt
+                            salt: salt,
                         });
                         return [4 /*yield*/, user.save()];
                     case 5:
+                        newUser = _b.sent();
+                        //add self to contacts
+                        newUser.contacts = [newUser._id];
+                        return [4 /*yield*/, newUser.save()];
+                    case 6:
                         _b.sent();
                         payload = {
                             user: {
@@ -126,12 +131,12 @@ var AuthController = /** @class */ (function () {
                                 token: token
                             });
                         });
-                        return [3 /*break*/, 7];
-                    case 6:
+                        return [3 /*break*/, 8];
+                    case 7:
                         err_1 = _b.sent();
                         res.status(500).send("Error in Saving");
-                        return [3 /*break*/, 7];
-                    case 7: return [2 /*return*/];
+                        return [3 /*break*/, 8];
+                    case 8: return [2 /*return*/];
                 }
             });
         });
@@ -159,7 +164,7 @@ var AuthController = /** @class */ (function () {
                         user = _b.sent();
                         if (!user)
                             return [2 /*return*/, res.status(400).json({
-                                    message: "User Not Exist"
+                                    message: "User does not exist"
                                 })];
                         return [4 /*yield*/, bcryptjs_1.default.compare(password, user.passwordHash)];
                     case 3:

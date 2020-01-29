@@ -70,9 +70,13 @@ export class AuthController implements IControllable {
           user = new User({
               username,
               passwordHash,
-              salt
+              salt,
           });
-          await user.save();
+          const newUser = await user.save();
+
+          //add self to contacts
+          newUser.contacts = [newUser._id];
+          await newUser.save();
 
           const payload = {
               user: {
@@ -113,7 +117,7 @@ export class AuthController implements IControllable {
         });
         if (!user)
           return res.status(400).json({
-            message: "User Not Exist"
+            message: "User does not exist"
           });
 
         const isMatch = await bcrypt.compare(password, user.passwordHash);
