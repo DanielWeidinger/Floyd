@@ -1,3 +1,29 @@
 .entry{
-  margin: 3em;
+
+  display:inline-block;
+  clear: both;
+  padding: 20px;
+  border-radius: 30px;
+  margin-bottom: 2px;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.me{
+  background: #595959;
+  float: left;
+}
+
+.him{
+  float: right;
+  background: #fa5788;
+  color: fa5788;
+}
+
+.him + .me{
+  border-bottom-right-radius: 5px;
+}
+
+.me + .me{
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
