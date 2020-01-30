@@ -53,6 +53,8 @@ export class ChatComponent implements OnInit {
     this.chat.messages.push(message);
     this.messagingService.sendMessage(message);
 
+    this.text = '';
+
     this.scrollToBottom();
   }
 

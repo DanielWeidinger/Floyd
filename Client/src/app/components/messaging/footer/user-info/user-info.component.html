@@ -1,8 +1,20 @@
-<mat-card fxFlexOffset class="user">
-  <button mat-icon-button color="primary">
+<!--<mat-card fxFlexOffset class="user">-->
+<!--&lt;!&ndash;  <button mat-icon-button color="primary">&ndash;&gt;-->
+<!--&lt;!&ndash;    <mat-icon>account_circle</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;  </button>&ndash;&gt;-->
+<!--  <button mat-fab color="primary">-->
+<!--    <mat-icon>account_circle</mat-icon>-->
+<!--  </button>-->
+<!--  <h1 *ngIf="user !== undefined">-->
+<!--    {{user.username}}-->
+<!--  </h1>-->
+<!--</mat-card>-->
+
+<mat-card fxLayout="row" fxLayoutAlign="space-around center" class="user">
+  <button mat-fab color="primary">
     <mat-icon>account_circle</mat-icon>
   </button>
-  <h1 *ngIf="user !== undefined">
+  <h1  *ngIf="user !== undefined" class="user-name">
     {{user.username}}
   </h1>
 </mat-card>
