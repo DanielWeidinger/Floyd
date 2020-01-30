@@ -66,4 +66,11 @@ export class AuthService {
   public getUser(): UserDto {
     return this.user;
   }
+
+  public logout() {
+    if (this.token) {
+      this.token = null;
+      this.router.navigate(['login']);
+    }
+  }
 }
