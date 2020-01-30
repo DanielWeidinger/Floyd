@@ -18,7 +18,7 @@ const GroupSchema: Schema = new Schema({
         required: true
     },
     users: {
-        type: String,
+        type: [String],
         required: true
     }
 });

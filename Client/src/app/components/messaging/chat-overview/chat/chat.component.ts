@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Chat } from './Chat';
 import { MessageDto } from '../../../../../../../Server/src/models/Message';
 import { AuthService } from 'src/app/services/auth.service';
@@ -19,6 +19,7 @@ export class ChatComponent implements OnInit {
   you: UserDto;
   text = '';
 
+  @ViewChild('scroll', {static: false}) private scroller: ElementRef;
 
   constructor(private messagingService: MessagingService, private authService: AuthService) {
     this.you = this.authService.getUser();
@@ -27,16 +28,15 @@ export class ChatComponent implements OnInit {
   ngOnInit() {
     if (!this.isPreview) {
       const currUnread = this.chat.messages.filter(message => !message.read).length;
+      console.log(currUnread)
 
       this.messagingService.getMessages().subscribe((history: MessageDto[]) => {
-        console.log(history)
         this.chat.messages = history
         .filter(message => message.username === this.chat.recipient.username && message.recipient === this.you.username
                         || message.username === this.you.username && message.recipient === this.chat.recipient.username);
 
         this.unread = this.chat.messages.length - currUnread;
       });
-
     }
   }
 
@@ -52,5 +52,16 @@ export class ChatComponent implements OnInit {
 
     this.chat.messages.push(message);
     this.messagingService.sendMessage(message);
+
+    this.scrollToBottom();
   }
+
+  scrollToBottom(){
+    try {
+      this.scroller.nativeElement.scrollTop = this.scroller.nativeElement.scrollHeight;
+    } catch (err) {
+
+    }
+  }
+
 }

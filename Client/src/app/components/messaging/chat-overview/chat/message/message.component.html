@@ -1,9 +1,6 @@
-<mat-card [class.primary]="message.username === you.username" fxLayout="row" class="entry">
-  <mat-card-title>
-
-    <div >
-      {{message.username}}
-    </div>
-  </mat-card-title>
-  <mat-card-content>{{message.text}}</mat-card-content>
+<div fxLayout="row" fxLayoutAlign="{{message.username === you.username ? 'start' : 'end'}}" >
+  <mat-card
+  [class.me]="message.username === you.username" [class.him]="message.username !== you.username" class="entry">
+  {{message.text}}
 </mat-card>
+</div>

@@ -19,7 +19,7 @@
       <div class="chat" *ngFor="let chat of currentChats" fxFlex cdkDrag>
         <app-chat [chat]="chat"></app-chat>
         <div *cdkDragPreview>
-          <app-chat [chat]="chat"></app-chat>
+          <app-chat [isPreview]="true" [chat]="{recipient: chat.recipient}"></app-chat>
         </div>
         <div *cdkDragPlaceholder fxFlex>
           <app-chat [isPreview]="true" [chat]="{recipient: chat.recipient}"></app-chat>

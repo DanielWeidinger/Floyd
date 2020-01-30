@@ -78,6 +78,7 @@ export class FloydController implements IControllable{
                         }
 
                         dbUser.contacts.push(dbContact._id);
+                        dbContact.contacts.push(dbUser._id);
                         dbUser.save((err) => {
                         if(err){
                             throw err;
@@ -101,7 +102,7 @@ export class FloydController implements IControllable{
                 }
 
                 Message.find({"$and": [{"$or": [{recipient: dbUser.username}, { username: dbUser.username}] },
-                                        {read: true}]}, (err, dbMessages) => {
+                                                {read: true}]}, (err, dbMessages) => {
                     if(err){
                         throw err;
                     }

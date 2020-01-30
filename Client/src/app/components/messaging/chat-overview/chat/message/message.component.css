@@ -1,3 +1,24 @@
 .entry{
-  margin: 3em;
+  padding: 1em;
+  border-radius: 2em;
+  margin-bottom: 2px;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.me{
+  background: #595959;
+}
+
+.him{
+  background: #fa5788;
+  color: fa5788;
+}
+
+.him + .me{
+  border-bottom-right-radius: 5px;
+}
+
+.me + .me{
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
