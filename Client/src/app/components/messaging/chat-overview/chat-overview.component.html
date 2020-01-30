@@ -3,18 +3,25 @@
       <div fxFlex="85%" fxLayout="row"
         cdkDropList [cdkDropListData]="currentChats" (cdkDropListDropped)="drop($event)">
 
-        <div fxLayout="column">
-          <button mat-fab fxFlexAlign="center" class="add_button" (click)="addContact()">
+        <button mat-fab [matMenuTriggerFor]="userMenu" class="fab_button" style="position: fixed; z-index: 9999;">
+          <mat-icon>
+            menu_open
+          </mat-icon>
+        </button>
+        <mat-menu fxLayout="column" #userMenu>
+          <button mat-menu-item (click)="addContact()">
             <mat-icon>
               person_add
             </mat-icon>
+            Add contact
           </button>
-          <button mat-fab fxFlexAlign="center" class="add_button" (click)="addGroup()">
+          <button mat-menu-item (click)="addGroup()">
             <mat-icon>
-              person_add
+              group_add
             </mat-icon>
+            Creat croup
           </button>
-        </div>
+        </mat-menu>
 
       <div class="chat" *ngFor="let chat of currentChats" fxFlex cdkDrag>
         <app-chat [chat]="chat"></app-chat>

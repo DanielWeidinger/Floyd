@@ -1,6 +1,11 @@
 <div fxLayout="row" fxLayoutAlign="{{message.username === you.username ? 'start' : 'end'}}" >
-  <mat-card
-  [class.me]="message.username === you.username" [class.him]="message.username !== you.username" class="entry">
-  {{message.text}}
-</mat-card>
+  <div>
+    <mat-card
+    [class.me]="message.username === you.username" [class.him]="message.username !== you.username" class="entry">
+    {{message.text}}
+    </mat-card>
+    <br>
+    <p style="font-size: 0.5em;">{{message.timestamp}}</p>
+  </div>
+
 </div>

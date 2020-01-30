@@ -12,7 +12,7 @@ export class AddContactDialogComponent implements OnInit {
 
   username: string;
 
-  constructor(private messagingService: MessagingService, private dialogRef: MatDialogRef<AddContactDialogComponent>) { }
+  constructor(private dialogRef: MatDialogRef<AddContactDialogComponent>) { }
 
   ngOnInit() {
   }

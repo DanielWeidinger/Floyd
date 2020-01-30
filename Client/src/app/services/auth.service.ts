@@ -15,11 +15,11 @@ export class AuthService {
   private user: UserDto;
 
   constructor(private httpService: HttpClient, private cookieService: CookieService, private router: Router) {
-    /*this.token = cookieService.get('token');
+    this.token = cookieService.get('token');
     const userString = cookieService.get('user');
     if (userString) {
       this.user = JSON.parse(userString);
-    }*/
+    }
   }
 
   public updateToken(givenUsername: string, givenPassword: string, signIn?: boolean): Observable<boolean> {

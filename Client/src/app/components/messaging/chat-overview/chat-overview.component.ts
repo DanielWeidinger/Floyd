@@ -7,6 +7,7 @@ import {MessagingService} from '../../../services/messaging.service';
 import { UserDto } from '../../../../../../Server/src/models/User';
 import {AddGroupDialogComponent} from '../dialogs/add-group-dialog/add-group-dialog.component';
 import {Subject} from 'rxjs';
+import { GroupDto } from '../../../../../../Server/src/models/Group';
 
 @Component({
   selector: 'app-chat-overview',
@@ -55,18 +56,18 @@ export class ChatOverviewComponent implements OnInit {
   addGroup() {
     const addGroupDialog = this.dialog.open(AddGroupDialogComponent);
 
-    addGroupDialog.afterClosed().subscribe((contact: UserDto | null) => {
-      if (!contact) {
-        throw new Error('AddContact: user not found');
+    addGroupDialog.afterClosed().subscribe((group: GroupDto | null) => {
+      if (!group) {
+        throw new Error('AddGroup: group not found');
       }
 
-      // this.messagingService.addContacts(contact.username).subscribe((result: UserDto) => {
-      //   this.chats.push(this.createChat(result, false));
-      // });
+      this.messagingService.addGroup(group.name, group.users).subscribe((result: GroupDto) => {
+        this.eventsSubject.next(this.createChat(null, true, result));
+      });
     });
   }
 
-  createChat(user: UserDto, group: boolean): Chat {
-    return {recipient: user, messages: [], isGroup: group};
+  createChat(user: UserDto, isGroupParam: boolean, givenGroup?: GroupDto): Chat {
+    return {recipient: user, messages: [], isGroup: isGroupParam, group: givenGroup};
   }
 }

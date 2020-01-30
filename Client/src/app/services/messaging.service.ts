@@ -6,6 +6,7 @@ import { Config } from './Config';
 import { UserDto } from '../../../../Server/src/models/User';
 import { SocketService } from './socket.service';
 import { MessageDto } from '../../../../Server/src/models/Message';
+import { GroupDto } from '../../../../Server/src/models/Group';
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +59,25 @@ export class MessagingService {
       )
       .subscribe((newContact: UserDto) => {
         observer.next(newContact);
+      });
+    });
+  }
+
+  public addGroup(groupName: string, users: string[]): Observable<GroupDto> {
+    return new Observable<GroupDto>(observer => {
+      this.httpService.post(Config.uri + '/messaging/contact',
+      { // body
+        name: groupName,
+        groupMembers: users
+      },
+      { // header
+        headers: {
+          token: this.authService.getToken()
+        },
+      }
+      )
+      .subscribe((newGroup: GroupDto) => {
+        observer.next(newGroup);
       });
     });
   }
