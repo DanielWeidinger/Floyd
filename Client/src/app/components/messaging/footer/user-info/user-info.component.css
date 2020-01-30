@@ -1,2 +1,8 @@
 .user{
+  border-radius: 1em;
+}
+
+.user-name{
+  margin-left: 0.5em;
+  margin-right: 0.5em;
 }

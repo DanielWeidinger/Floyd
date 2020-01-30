@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card style="border-radius: 1em;">
   <mat-card-title>
     Login
   </mat-card-title>
@@ -10,8 +10,8 @@
       <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" required>
     </mat-form-field><br/>
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button (click)="login()" color="primary" style="margin-right:5px;">login</button>
-    <button mat-raised-button (click)="this.router.navigate(['register'])" color="primary" style="margin-right:5px;">register</button>
+  <mat-card-actions fxLayout="row" fxLayoutAlign="space-around center" style="margin-bottom:0.5em;">
+    <button mat-raised-button (click)="login()" color="primary" >login</button>
+    <button mat-raised-button (click)="this.router.navigate(['register'])" color="primary" >register</button>
   </mat-card-actions>
 </mat-card>
