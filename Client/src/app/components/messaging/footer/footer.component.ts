@@ -5,8 +5,8 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { IGroup } from '../../../../../../Server/src/models/Group';
 import { UserDto } from '../../../../../../Server/src/models/User';
 import { MessagingService } from 'src/app/services/messaging.service';
-import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
 import { Chat } from '../chat-overview/chat/Chat';
+import {Observable, Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-footer',
@@ -18,26 +18,17 @@ export class FooterComponent implements OnInit {
   @Input() chats: Chat[];
   groups: IGroup[];
 
+  private eventsSubscription: Subscription;
+
+  @Input() events: Observable<Chat>;
+
   constructor(private messagingService: MessagingService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.messagingService.getContacts().subscribe((result: UserDto[]) => {
       this.chats = result.map(user => this.createChat(user, false));
     });
-  }
-
-  addContact() {
-    const addContactDialog = this.dialog.open(AddContactDialogComponent);
-
-    addContactDialog.afterClosed().subscribe((contact: UserDto | null) => {
-      if (!contact) {
-        throw new Error('AddContact: user not found');
-      }
-
-      this.messagingService.addContacts(contact.username).subscribe((result: UserDto) => {
-        this.chats.push(this.createChat(result, false));
-      });
-    });
+    this.eventsSubscription = this.events.subscribe(chat => this.chats.push(chat));
   }
 
   drop(event: CdkDragDrop<Chat[]>) {

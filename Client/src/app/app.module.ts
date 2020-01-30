@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {EventEmitter, NgModule} from '@angular/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,6 +26,7 @@ import { MessageComponent } from './components/messaging/chat-overview/chat/mess
 import { MessagingService } from './services/messaging.service';
 import { AddContactDialogComponent } from './components/messaging/dialogs/add-contact-dialog/add-contact-dialog.component';
 import { UserInfoComponent } from './components/messaging/footer/user-info/user-info.component';
+import { AddGroupDialogComponent } from './components/messaging/dialogs/add-group-dialog/add-group-dialog.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { UserInfoComponent } from './components/messaging/footer/user-info/user-
     ChatPartnerComponent,
     MessageComponent,
     AddContactDialogComponent,
-    UserInfoComponent
+    UserInfoComponent,
+    AddGroupDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -62,9 +64,10 @@ import { UserInfoComponent } from './components/messaging/footer/user-info/user-
     AuthService,
     SocketService,
     MessagingService,
-    CookieService
+    CookieService,
+    EventEmitter
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AddContactDialogComponent]
+  entryComponents: [AddContactDialogComponent, AddGroupDialogComponent]
 })
 export class AppModule { }
